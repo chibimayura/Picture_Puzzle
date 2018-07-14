@@ -1,9 +1,193 @@
 <!DOCTYPE>
-
 <html>
 <head>
-  <title>Project 1</title>
+	<title>puzzle</title>
+
+	<style type="text/css">
+		body {
+		       margin: 0px;
+		       padding: 0px;
+		}
+		.imgCenter {
+			width: 310px;
+			height: 310px;
+			background-image: url("images/Pembroke-Welsh-Corgi-MP.jpg");
+			background-repeat: no-repeat;
+   			background-position: center; 
+    		position: absolute;
+    		display: none;
+    		z-index: 2;
+		}
+		#container {
+			width: 310px;
+			height: 310px;
+			border: 2px solid black;
+			margin: auto;
+			margin-top: 20px;
+		}
+		.easy {
+			float: left;
+			position: relative;
+			width: 100px;
+			height: 100px;
+			background-color: gray;
+			border: 1px solid black;
+			font-size: 24px;
+			text-align: center;
+			color: white;
+		}
+		.medium {
+			float: left;
+			position: relative;
+			width: 75px;
+			height: 75px;
+			background-color: gray;
+			border: 1px solid black;
+			font-size: 24px;
+			text-align: center;
+			color: white;
+		}
+		.hard {
+			float: left;
+			position: relative;
+			width: 60px;
+			height: 60px;
+			background-color: gray;
+			border: 1px solid black;
+			font-size: 24px;
+			text-align: center;
+			color: white;
+		}
+		.shift:hover {
+			opacity: .7;
+			cursor: pointer;
+		}
+		#buttons {
+			text-align: center;
+			margin: auto;
+			margin-top: 20px;
+		}
+	</style>
 </head>
 <body>
+
+<!-- <div><img src="images/Pembroke-Welsh-Corgi-MP.jpg" alt="corgi"></div> -->
+
+<div id="container">
+	<div class="imgCenter"></div>
+	<div id="tiles">
+		
+	</div>
+
+</div>
+
+<div id="buttons">
+	<button id="easy" data-value="3">Easy</button>
+	<button id="medium" data-value="4">Medium</button>
+	<button id="hard" data-value="5">Hard</button>
+
+	<button id="start">Start</button>
+	<button id="hint">Hint</button>
+</div>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+//puzzle piece number
+	var puzzleNum3 = [1, 2, 3, 4, 5, 6, 7, 8];
+	var puzzleNum4 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+	var puzzleNum5 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
+	var puzzleNum;
+	var blocks;
+
+
+// 3x3 layout
+	$(document).on('click', '#easy', function(){
+		if ($('#tiles').text("") !== "") {
+			
+			puzzleNum = puzzleNum3;
+			for (var i = 0; i < puzzleNum.length; i++) {
+				blocks = $('<div>').attr('class', 'easy shift');
+				blocks.text(puzzleNum[i]);
+				$('#tiles').append(blocks);
+			}
+		}
+	});	
+
+// 4x4 layout
+	$(document).on('click', '#medium', function(){
+		if ($('#tiles').text("") !== "") {
+			
+			puzzleNum = puzzleNum4;
+			for (var i = 0; i < puzzleNum.length; i++) {
+				blocks = $('<div>').attr('class', 'medium shift');
+				blocks.text(puzzleNum[i]);
+				$('#tiles').append(blocks);
+			}
+		}
+	});	
+
+// 5x5 layout
+	$(document).on('click', '#hard', function(){
+		if ($('#tiles').text("") !== "") {
+
+			puzzleNum = puzzleNum5;
+			for (var i = 0; i < puzzleNum.length; i++) {
+				blocks = $('<div>').attr('class', 'hard shift');
+				blocks.text(puzzleNum[i]);
+				$('#tiles').append(blocks);
+			}
+		}
+	});	
+
+// start-randomize the tiles
+	$(document).on('click', '#start', function(){
+		if ($('#tiles').children().length == 8) {
+			$('#tiles').text("");
+			puzzleNum = puzzleNum.sort(function(a, b){return 0.5 - Math.random()});
+			for (var i = 0; i < puzzleNum.length; i++) {
+				blocks = $('<div>').attr('class', 'easy shift');
+				blocks.text(puzzleNum[i]);
+				$('#tiles').append(blocks);
+			}
+		}else if ($('#tiles').children().length == 15) {
+			$('#tiles').text("");
+			puzzleNum = puzzleNum.sort(function(a, b){return 0.5 - Math.random()});
+			for (var i = 0; i < puzzleNum.length; i++) {
+				blocks = $('<div>').attr('class', 'medium shift');
+				blocks.text(puzzleNum[i]);
+				$('#tiles').append(blocks);
+			}
+		}else if ($('#tiles').children().length == 24) {
+			$('#tiles').text("");
+			puzzleNum = puzzleNum.sort(function(a, b){return 0.5 - Math.random()});
+			for (var i = 0; i < puzzleNum.length; i++) {
+				blocks = $('<div>').attr('class', 'hard shift');
+				blocks.text(puzzleNum[i]);
+				$('#tiles').append(blocks);
+			}
+		}
+	});	
+
+// hint 
+	$(document).on('click', '#hint', function(){
+		$('.imgCenter').fadeIn(2000);
+		$('.imgCenter').fadeOut(2000);
+	});	
+
+// moving blocks
+// need to figure out a way to know which way to move/ is allowed
+
+	$(document).on('click', '.shift', function(){
+		var widthSize = $(this).width() + "px";
+		console.log(widthSize);
+		// $(this).animate({"left": "+=100px"});
+		$(this).animate({"left": "+=" + widthSize});
+	});
+		
+</script>
+
 </body>
 </html>
