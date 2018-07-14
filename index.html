@@ -16,7 +16,7 @@
 </head>
 <body>
     <div id="target"></div>
-    <img src="../Picture_Puzzle/assets/images/img_800x600.jpg" alt="hidden" id="hiddenImg">
+    <img src="../Picture_Puzzle/assets/images/img_638X957.jpg" alt="hidden" id="hiddenImg">
 
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -55,7 +55,7 @@
                     // append it into HTML dynamically
                     // Notice each square uses the same image earth_img_600x600.jpg
                     // It just uses a different x/y offset for each square
-                    $("#board").append("<div data-sequence = " + tileSequence[i] + " style = 'position: absolute; left: " + ((i % 4) * tileWidth) + "px; top: " + Math.floor(i / 4) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; box-shadow: inset 0 0 20px #555555; background: #ffffff url(../Picture_Puzzle/assets/images/img_800x600.jpg) " + (-(tileSequence[i] % 4) * tileWidth) + "px " + -Math.floor(tileSequence[i] / 4) * tileHeight + "px no-repeat !important'></div>");
+                    $("#board").append("<div data-sequence = " + tileSequence[i] + " style = 'position: absolute; left: " + ((i % 4) * tileWidth) + "px; top: " + Math.floor(i / 4) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; box-shadow: inset 0 0 20px #555555; background: #ffffff url(../Picture_Puzzle/assets/images/img_638X957.jpg) " + (-(tileSequence[i] % 4) * tileWidth) + "px " + -Math.floor(tileSequence[i] / 4) * tileHeight + "px no-repeat !important'></div>");
                 }
                 // Empty up the 16th square, as the starting point
                 // emptySquare = 16
