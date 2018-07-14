@@ -3,12 +3,8 @@
 <html>
 <head>
   <title>GIF Puzzle - jQuery Plugin</title>
+  <link rel="stylesheet" href="../Picture_Puzzle/assets/css/reset.css">
   <style>
-      /* #board{
-          width: 600px;
-          height: 600px;
-      } */
-
       #hiddenImg{
           display: none;
       }
@@ -16,7 +12,7 @@
 </head>
 <body>
     <div id="target"></div>
-    <img src="../Picture_Puzzle/assets/images/img_800x600.jpg" alt="hidden" id="hiddenImg">
+    <img src="http://ridersnhorses.com/wp-content/uploads/2015/11/paleta-de-coloes-en-ingles.jpg" alt="hidden" id="hiddenImg">
 
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -30,7 +26,7 @@
             // The index of the empty square by default, the 16th square
             var emptySquare = 16;
             // We set the empty tile
-            var randomEmptyTile = Math.floor(Math.random() * emptySquare);
+            var randomEmptyTile = Math.ceil(Math.random() * emptySquare);
             // We set the sequence of tiles
             var tileSequence = [];
             for (var i=0; i<emptySquare; i++){
@@ -39,28 +35,27 @@
             // We captutre the width and height of the current image
             var imgWidth = parseInt($("#hiddenImg").css("width"));
             var imgHeight = parseInt($("#hiddenImg").css("height"));
-
             // Now, this is where we create the plugin and call it fifteen.
             $.fn.extend({ fifteen:function(pieces){
                 // Grab the id of the HTML element into which we are placing the game,
                 // it is the selector - "#target" from  $("#target").fifteen(150);
                 var targetElement = "#" + $(this).attr("id");
-                var tileWidth = imgWidth / pieces;
-                var tileHeight = imgHeight / pieces;
+                var tileWidth = Math.floor(imgWidth / pieces);
+                var tileHeight = Math.floor(imgHeight/ pieces);
                 $(targetElement).html("<div id = 'board'></div>");
-                $("#board").css({ position:'absolute', width: imgWidth, height: imgHeight, border: '1px solid gray' });
+                $("#board").css({ position:'absolute', width: tileWidth, height: tileHeight, border: '1px solid gray' });
                     // Populate the game board's HTML container with 15 squares
                     tileSequence.sort(function(a, b){return 0.5 - Math.random()});
-                    for (var i = 0; i < 16; i++){
+                    for (var i = 0; i < emptySquare; i++){
                     // A dirty way to create an arbitrary DIV and
                     // append it into HTML dynamically
                     // Notice each square uses the same image earth_img_600x600.jpg
                     // It just uses a different x/y offset for each square
-                    $("#board").append("<div data-sequence = " + tileSequence[i] + " style = 'position: absolute; left: " + ((i % 4) * tileWidth) + "px; top: " + Math.floor(i / 4) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; box-shadow: inset 0 0 20px #555555; background: #ffffff url(../Picture_Puzzle/assets/images/img_800x600.jpg) " + (-(tileSequence[i] % 4) * tileWidth) + "px " + -Math.floor(tileSequence[i] / 4) * tileHeight + "px no-repeat !important'></div>");
+                    $("#board").append("<div data-sequence = " + tileSequence[i] + " style = 'position: absolute; left: " + ((i % 4) * tileWidth) + "px; top: " + Math.floor(i / 4) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; box-shadow: inset 0 0 20px #555555; background: #ffffff url(http://ridersnhorses.com/wp-content/uploads/2015/11/paleta-de-coloes-en-ingles.jpg)" + (-(tileSequence[i] % 4) * tileWidth) + "px " + -Math.floor(tileSequence[i] / 4) * tileHeight + "px no-repeat !important'></div>");
                 }
                 // Empty up the 16th square, as the starting point
                 // emptySquare = 16
-                    $("#board").children("div:nth-child(" + emptySquare + ")").css({backgroundImage: "", background: "#ffffff"});
+                    $("#board").children("div:nth-child(" + randomEmptyTile + ")").css({backgroundImage: "", background: "#ffffff"});
                 // Attach click event to each square
                     $("#board").children("div").click(function()
                 {
@@ -79,11 +74,12 @@
             // We can only move the four surrounding squares
                 var movable = false;
                 // Swap x/y between the clicked square and the currently empty square
-                var oldx = $("#board").children("div:nth-child(" + emptySquare + ")").css("left");
-                var oldy = $("#board").children("div:nth-child(" + emptySquare + ")").css("top");
+                var oldx = $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("left");
+                var oldy = $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("top");
                 var newx = $(clicked_square).css("left");
                 var newy = $(clicked_square).css("top");
                 // The clicked square is north of the empty square
+                debugger;
                 if (oldx == newx && newy == (parseInt(oldy) - tileHeight) + 'px'){
                     movable = true;
                 };
@@ -105,8 +101,8 @@
                     // Swap squares… Animate new square into old square position
                     $(clicked_square).animate({ left: oldx, top: oldy }, 200, function(){
                         //Move old square into new square position
-                        $("#board").children("div:nth-child(" + emptySquare + ")").css("left", newx);
-                        $("#board").children("div:nth-child(" + emptySquare + ")").css("top", newy);
+                        $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("left", newx);
+                        $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("top", newy);
                     });
                 };
             };
