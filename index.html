@@ -7,56 +7,94 @@
   <style>
       #hiddenImg{
         display: none;
+        position: absolute;
+        z-index: 2;
       }
 
-      #board{
-        overflow:visible;
-      }
   </style>
 </head>
 <body>
-    <div id="target"></div>
+    <form id='btns'>
+        <button class="btn btn-primary" data-tileCount="3">Easy</button>
+        <button class="btn btn-primary" data-tileCount="4">Medium</button>
+        <button class="btn btn-primary" data-tileCount="5">Difficult</button>
+        <button class="btn-primary" id="start">Start</button>
+    </form>
     <img src="../Picture_Puzzle/assets/images/img_638x957.jpg" alt="hidden" id="hiddenImg">
-
+    <div id="target"></div>
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
         // Initialize the game and create the plugin
         // When the squares swap places, the moving square must always appear on top
         var zi = 1; 
+        var tileWidth;
+        var tileHeight;
+        var tileCount;
+        var gameStarted = false;
+        var numHint = 5;
         // We increment z-index each time a square is shifted
         // The index of the empty square by default, the 16th square
-        var emptySquare = 16;
+        var totalTiles;
         // We set the empty tile
-        var randomEmptyTile = Math.ceil(Math.random() * emptySquare);
+        var randomEmptyTile;
         // We set the sequence of tiles
         var tileSequence = [];
-        for (var i=0; i<emptySquare; i++){
-            tileSequence.push(i);
-        }
         // We captutre the width and height of the current image and tile
         var imgWidth = parseInt($("#hiddenImg").css("width"));
         var imgHeight = parseInt($("#hiddenImg").css("height"));
-        // Now, this is where we create the plugin and call it fifteen.
-        $.fn.extend({ fifteen:function(pieces){
+
+        $.fn.extend({ sortedTiles:function(pieces){
             // Grab the id of the HTML element into which we are placing the game,
-            // it is the selector - "#target" from  $("#target").fifteen(150);
+            // it is the selector - "#target" from  $("#target").sortedTiles(150);
             var targetElement = "#" + $(this).attr("id");
-            var tileWidth = Math.round(imgWidth / pieces);
-            var tileHeight = Math.round(imgHeight / pieces);
+            tileWidth = Math.floor(imgWidth / pieces);
+            tileHeight = Math.floor(imgHeight / pieces);
+            totalTiles = tileCount*tileCount;
+            tileSequence = [];
+            for (var i=0; i<totalTiles; i++){
+                tileSequence.push(i);
+            }
+            randomEmptyTile = Math.ceil(Math.random() * totalTiles);
             $(targetElement).html("<div id = 'board'></div>");
-            $("#board").css({ position:'absolute', width: imgWidth, height: imgHeight, border: '1px solid gray' });
+            $("#board").css({ position:'absolute', width: imgWidth, height: imgHeight});
                 // Populate the game board's HTML container with 15 squares
-                tileSequence.sort(function(a, b){return 0.5 - Math.random()});
-                for (var i = 0; i < emptySquare; i++){
+                for (var i = 0; i < totalTiles; i++){
                 // A dirty way to create an arbitrary DIV and
                 // append it into HTML dynamically
                 // Notice each square uses the same image earth_img_638x957.jpg
                 // It just uses a different x/y offset for each square
-                $("#board").append("<div data-sequence = " + tileSequence[i] + " style = 'position: absolute; left: " + ((i % 4) * tileWidth) + "px; top: " + Math.floor(i / 4) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; -moz-box-shadow: inset 0 0 20px #555555; -webkit-box-shadow: inset 0 0 20px #555555; box-shadow: inset 0 0 20px #555555; background: #ffffff url(../Picture_Puzzle/assets/images/img_638x957.jpg) " + (-(tileSequence[i] % 4) * tileWidth) + "px " + -Math.floor(tileSequence[i] / 4) * tileHeight + "px no-repeat !important'></div>");
+                $("#board").append("<div data-sequence = " + tileSequence[i] + " style = 'position: absolute; left: " + ((i % tileCount) * tileWidth) + "px; top: " + Math.floor(i / tileCount) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; -moz-box-shadow: inset 0 0 20px #555555; -webkit-box-shadow: inset 0 0 20px #555555; box-shadow: inset 0 0 20px #555555; background: #ffffff url(../Picture_Puzzle/assets/images/img_638x957.jpg) " + (-(tileSequence[i] % tileCount) * tileWidth) + "px " + -Math.floor(tileSequence[i] / tileCount) * tileHeight + "px no-repeat !important'></div>");
+                }
+            }
+        });
+
+        // Now, this is where we create the plugin and call it createGame.
+        $.fn.extend({ createGame:function(pieces){
+            // Grab the id of the HTML element into which we are placing the game,
+            // it is the selector - "#target" from  $("#target").createGame(150);
+            var targetElement = "#" + $(this).attr("id");
+            tileWidth = Math.floor(imgWidth / pieces);
+            tileHeight = Math.floor(imgHeight / pieces);
+            totalTiles = tileCount*tileCount;
+            tileSequence = [];
+            for (var i=0; i<totalTiles; i++){
+                tileSequence.push(i);
+            }
+            randomEmptyTile = Math.ceil(Math.random() * totalTiles);
+            $(targetElement).html("<div id = 'board'></div>");
+            $("#board").css({ position:'absolute', width: imgWidth, height: imgHeight});
+                // Populate the game board's HTML container with 15 squares
+                tileSequence.sort(function(a, b){return 0.5 - Math.random()});
+                for (var i = 0; i < totalTiles; i++){
+                // A dirty way to create an arbitrary DIV and
+                // append it into HTML dynamically
+                // Notice each square uses the same image earth_img_638x957.jpg
+                // It just uses a different x/y offset for each square
+                $("#board").append("<div data-sequence = " + tileSequence[i] + " style = 'position: absolute; left: " + ((i % tileCount) * tileWidth) + "px; top: " + Math.floor(i / tileCount) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; -moz-box-shadow: inset 0 0 20px #555555; -webkit-box-shadow: inset 0 0 20px #555555; box-shadow: inset 0 0 20px #555555; background: #ffffff url(../Picture_Puzzle/assets/images/img_638x957.jpg) " + (-(tileSequence[i] % tileCount) * tileWidth) + "px " + -Math.floor(tileSequence[i] / tileCount) * tileHeight + "px no-repeat !important'></div>");
             }
             // Empty up the 16th square, as the starting point
-            // emptySquare = 16
+            // totalTiles = 16
             $("#board").children("div:nth-child(" + randomEmptyTile + ")").css({backgroundImage: " ", background: "#ffffff"});
             // Attach click event to each square
             $("#board").children("div").click(function(){
@@ -107,8 +145,48 @@
             };
         };
     // Ok, we're ready to initialize the game, let's do it.
-    // Create a game with 150 by 150 squares inside "#target" div:
-        $("#target").fifteen(4);
+    // Create a game with 4 X 4 tiles inside "#target" div:
+    $(document).on("click", ".btn", function(){
+        event.preventDefault();
+        tileCount = parseInt($(this).attr("data-tileCount"));
+        $("#target").sortedTiles(tileCount);
+        return tileCount;
+    });
+
+    $(document).on("click", "#start", function(){
+        event.preventDefault();
+        if(tileCount != undefined && gameStarted === false){
+            $("#target").createGame(tileCount);
+            $(".btn").hide();
+            var newBTN = $("<button class='btn-primary' id='giveUp'>I GIVE UP!</button>");
+            var hintBTN = $("<button class='btn-primary' id='hint'>" + numHint + "hints</button>");
+            $("#btns").append(hintBTN, newBTN);
+            gameStarted = true;
+        }else if(tileCount == undefined){
+            alert("Select a difficulty!!!");
+        }
+    });
+
+    $(document).on("click", "#giveUp", function(){
+        event.preventDefault();
+    });
+
+    $(document).on("click", "#hint", function (){
+        event.preventDefault();
+        if(numHint > 1){
+            $("#hiddenImg").fadeIn(1000);
+            $("#hiddenImg").delay(2000).fadeOut(1000);
+            numHint--;
+            $("#hint").text(numHint + "hints");
+        }else if (numHint > 0){
+            $("#hiddenImg").fadeIn(1000);
+            $("#hiddenImg").delay(2000).fadeOut(1000);
+            numHint--;
+            $("#hint").text(numHint + "hint");
+        }else{
+            alert("Show me your money");
+        }
+    });
     </script>
 </body>
 </html>
