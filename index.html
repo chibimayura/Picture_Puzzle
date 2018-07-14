@@ -3,116 +3,112 @@
 <html>
 <head>
   <title>GIF Puzzle - jQuery Plugin</title>
+  <link rel="stylesheet" href="../Picture_Puzzle/assets/css/reset.css">
   <style>
-      /* #board{
-          width: 600px;
-          height: 600px;
-      } */
-
       #hiddenImg{
-          display: none;
+        display: none;
+      }
+
+      #board{
+        overflow:visible;
       }
   </style>
 </head>
 <body>
     <div id="target"></div>
-    <img src="../Picture_Puzzle/assets/images/img_638X957.jpg" alt="hidden" id="hiddenImg">
+    <img src="../Picture_Puzzle/assets/images/img_638x957.jpg" alt="hidden" id="hiddenImg">
 
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
-        // This is where we initialize the game
-        $(document).ready(function(){
-            // Initialize the game and create the plugin
-            // When the squares swap places, the moving square must always appear on top
-            var zi = 1; 
-            // We increment z-index each time a square is shifted
-            // The index of the empty square by default, the 16th square
-            var emptySquare = 16;
-            // We set the empty tile
-            var randomEmptyTile = Math.floor(Math.random() * emptySquare);
-            // We set the sequence of tiles
-            var tileSequence = [];
-            for (var i=0; i<emptySquare; i++){
-                tileSequence.push(i);
+        // Initialize the game and create the plugin
+        // When the squares swap places, the moving square must always appear on top
+        var zi = 1; 
+        // We increment z-index each time a square is shifted
+        // The index of the empty square by default, the 16th square
+        var emptySquare = 16;
+        // We set the empty tile
+        var randomEmptyTile = Math.ceil(Math.random() * emptySquare);
+        // We set the sequence of tiles
+        var tileSequence = [];
+        for (var i=0; i<emptySquare; i++){
+            tileSequence.push(i);
+        }
+        // We captutre the width and height of the current image and tile
+        var imgWidth = parseInt($("#hiddenImg").css("width"));
+        var imgHeight = parseInt($("#hiddenImg").css("height"));
+        // Now, this is where we create the plugin and call it fifteen.
+        $.fn.extend({ fifteen:function(pieces){
+            // Grab the id of the HTML element into which we are placing the game,
+            // it is the selector - "#target" from  $("#target").fifteen(150);
+            var targetElement = "#" + $(this).attr("id");
+            var tileWidth = Math.round(imgWidth / pieces);
+            var tileHeight = Math.round(imgHeight / pieces);
+            $(targetElement).html("<div id = 'board'></div>");
+            $("#board").css({ position:'absolute', width: imgWidth, height: imgHeight, border: '1px solid gray' });
+                // Populate the game board's HTML container with 15 squares
+                tileSequence.sort(function(a, b){return 0.5 - Math.random()});
+                for (var i = 0; i < emptySquare; i++){
+                // A dirty way to create an arbitrary DIV and
+                // append it into HTML dynamically
+                // Notice each square uses the same image earth_img_638x957.jpg
+                // It just uses a different x/y offset for each square
+                $("#board").append("<div data-sequence = " + tileSequence[i] + " style = 'position: absolute; left: " + ((i % 4) * tileWidth) + "px; top: " + Math.floor(i / 4) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; -moz-box-shadow: inset 0 0 20px #555555; -webkit-box-shadow: inset 0 0 20px #555555; box-shadow: inset 0 0 20px #555555; background: #ffffff url(../Picture_Puzzle/assets/images/img_638x957.jpg) " + (-(tileSequence[i] % 4) * tileWidth) + "px " + -Math.floor(tileSequence[i] / 4) * tileHeight + "px no-repeat !important'></div>");
             }
-            // We captutre the width and height of the current image
-            var imgWidth = parseInt($("#hiddenImg").css("width"));
-            var imgHeight = parseInt($("#hiddenImg").css("height"));
-            // Now, this is where we create the plugin and call it fifteen.
-            $.fn.extend({ fifteen:function(pieces){
-                // Grab the id of the HTML element into which we are placing the game,
-                // it is the selector - "#target" from  $("#target").fifteen(150);
-                var targetElement = "#" + $(this).attr("id");
-                var tileWidth = imgWidth / pieces;
-                var tileHeight = imgHeight / pieces;
-                $(targetElement).html("<div id = 'board'></div>");
-                $("#board").css({ position:'absolute', width: imgWidth, height: imgHeight, border: '1px solid gray' });
-                    // Populate the game board's HTML container with 15 squares
-                    tileSequence.sort(function(a, b){return 0.5 - Math.random()});
-                    for (var i = 0; i < 16; i++){
-                    // A dirty way to create an arbitrary DIV and
-                    // append it into HTML dynamically
-                    // Notice each square uses the same image earth_img_600x600.jpg
-                    // It just uses a different x/y offset for each square
-                    $("#board").append("<div data-sequence = " + tileSequence[i] + " style = 'position: absolute; left: " + ((i % 4) * tileWidth) + "px; top: " + Math.floor(i / 4) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; box-shadow: inset 0 0 20px #555555; background: #ffffff url(../Picture_Puzzle/assets/images/img_638X957.jpg) " + (-(tileSequence[i] % 4) * tileWidth) + "px " + -Math.floor(tileSequence[i] / 4) * tileHeight + "px no-repeat !important'></div>");
-                }
-                // Empty up the 16th square, as the starting point
-                // emptySquare = 16
-                    $("#board").children("div:nth-child(" + emptySquare + ")").css({backgroundImage: "", background: "#ffffff"});
-                // Attach click event to each square
-                    $("#board").children("div").click(function()
-                {
+            // Empty up the 16th square, as the starting point
+            // emptySquare = 16
+            $("#board").children("div:nth-child(" + randomEmptyTile + ")").css({backgroundImage: " ", background: "#ffffff"});
+            // Attach click event to each square
+            $("#board").children("div").click(function(){
                 Move(this, tileWidth, tileHeight);
-                });
-                }
             });
-
-            // Move() is the function that is called when a square is clicked
-            // Note that it is independent of the plugin itself which is described above
-            // It takes two parameters,
-            //     1. object handle to the square that was clicked, and
-            //     2. the width of the square
-            function Move(clicked_square, tileWidth, tileHeight){
-            // We need to locate movable tiles based on where the empty spot is,
-            // We can only move the four surrounding squares
-                var movable = false;
-                // Swap x/y between the clicked square and the currently empty square
-                var oldx = $("#board").children("div:nth-child(" + emptySquare + ")").css("left");
-                var oldy = $("#board").children("div:nth-child(" + emptySquare + ")").css("top");
-                var newx = $(clicked_square).css("left");
-                var newy = $(clicked_square).css("top");
-                // The clicked square is north of the empty square
-                if (oldx == newx && newy == (parseInt(oldy) - tileHeight) + 'px'){
-                    movable = true;
-                };
-                // The clicked square is south of the empty square
-                if (oldx == newx && newy == (parseInt(oldy) + tileHeight) + 'px'){
-                    movable = true;
-                };
-                // The clicked square is west of the empty square
-                if ((parseInt(oldx) - tileWidth) + 'px' == newx && newy == oldy){
-                    movable = true;
-                };
-                // The clicked square is east of the empty square
-                if ((parseInt(oldx) + tileWidth) + 'px' == newx && newy == oldy){
-                    movable = true;
-                };
-                if (movable){
-                    // Increment zindex so the new tile is always on top of all others
-                    $(clicked_square).css("z-index", zi++);
-                    // Swap squares… Animate new square into old square position
-                    $(clicked_square).animate({ left: oldx, top: oldy }, 200, function(){
-                        //Move old square into new square position
-                        $("#board").children("div:nth-child(" + emptySquare + ")").css("left", newx);
-                        $("#board").children("div:nth-child(" + emptySquare + ")").css("top", newy);
-                    });
-                };
-            };
-        // Ok, we're ready to initialize the game, let's do it.
-        // Create a game with 150 by 150 squares inside "#target" div:
-            $("#target").fifteen(4);
+            }
         });
+
+        // Move() is the function that is called when a square is clicked
+        // Note that it is independent of the plugin itself which is described above
+        // It takes two parameters,
+        //     1. object handle to the square that was clicked, and
+        //     2. the width of the square
+        function Move(clicked_square, tileWidth, tileHeight){
+        // We need to locate movable tiles based on where the empty spot is,
+        // We can only move the four surrounding squares
+            var movable = false;
+            // Swap x/y between the clicked square and the currently empty square
+            var oldx = $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("left");
+            var oldy = $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("top");
+            var newx = $(clicked_square).css("left");
+            var newy = $(clicked_square).css("top");
+            // The clicked square is north of the empty square
+            if (oldx == newx && newy == (parseInt(oldy) - tileHeight) + 'px'){
+                movable = true;
+            };
+            // The clicked square is south of the empty square
+            if (oldx == newx && newy == (parseInt(oldy) + tileHeight) + 'px'){
+                movable = true;
+            };
+            // The clicked square is west of the empty square
+            if ((parseInt(oldx) - tileWidth) + 'px' == newx && newy == oldy){
+                movable = true;
+            };
+            // The clicked square is east of the empty square
+            if ((parseInt(oldx) + tileWidth) + 'px' == newx && newy == oldy){
+                movable = true;
+            };
+            if (movable){
+                // Increment zindex so the new tile is always on top of all others
+                $(clicked_square).css("z-index", zi++);
+                // Swap squares… Animate new square into old square position
+                $(clicked_square).animate({ left: oldx, top: oldy }, 200, function(){
+                    //Move old square into new square position
+                    $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("left", newx);
+                    $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("top", newy);
+                });
+            };
+        };
+    // Ok, we're ready to initialize the game, let's do it.
+    // Create a game with 150 by 150 squares inside "#target" div:
+        $("#target").fifteen(4);
     </script>
 </body>
 </html>
