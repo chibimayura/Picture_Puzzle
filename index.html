@@ -10,14 +10,15 @@
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
-        // This is a JavaScript event. It means - once DOM is finished loading,
-        // execute everything inside the callback function scope
         // This is where we initialize the game
-        
         $(document).ready(function(){
-            // Initialize the game and create the plugin// When the squares swap places, the moving square must always appear on top
-            var zi = 1; // We increment z-index each time a square is shifted// The index of the empty square by default, the 16th square
-            var EmptySquare = 16;// Now, this is where we create the plugin and call it fifteen.
+            // Initialize the game and create the plugin
+            // When the squares swap places, the moving square must always appear on top
+            var zi = 1; 
+            // We increment z-index each time a square is shifted
+            // The index of the empty square by default, the 16th square
+            var EmptySquare = 16;
+            // Now, this is where we create the plugin and call it fifteen.
             $.fn.extend({ fifteen:function(square_size){
                 // Grab the id of the HTML element into which we are placing the game,
                 // it is the selector - "#target" from  $("#target").fifteen(150);
@@ -26,13 +27,13 @@
                 var boardSize = (square_size * 4) + 'px';// Inject DIV into target, this is our game board
                 $(targetElement).html("<div id = 'board'></div>");
                 $("#board").css({ position:'absolute', width: boardSize, height: boardSize, border: '1px solid gray' });
-                // Populate the game board's HTML container with 15 squares
+                    // Populate the game board's HTML container with 15 squares
                     for (var i = 0; i < 16; i++){
-                // A  dirty way to create an arbitrary DIV and
-                // append it into HTML dynamically
-                // Notice each square uses the same image monalisa.jpg
-                // It just uses a different x/y offset for each square
-                    $("#board").append("<div style = 'position: absolute; left: " + ((i % 4) * square_size) + "px; top: " + Math.floor(i / 4) * square_size + "px; width: " + square_size + "px; height: " + square_size + "px; text-align: center; line-height: 150px; -moz-box-shadow: inset 0 0 20px #555555; -webkit-box-shadow: inset 0 0 20px #555555; box-shadow: inset 0 0 20px #555555; background: #ffffff url(../Picture_Puzzle/assets/images/earth_img_600x600.jpg) " + (-(i % 4) * square_size) + "px " + -Math.floor(i / 4) * square_size + "px no-repeat !important'></div>");
+                    // A dirty way to create an arbitrary DIV and
+                    // append it into HTML dynamically
+                    // Notice each square uses the same image earth_img_600x600.jpg
+                    // It just uses a different x/y offset for each square
+                    $("#board").append("<div style = 'position: absolute; left: " + ((i % 4) * square_size) + "px; top: " + Math.floor(i / 4) * square_size + "px; width: " + square_size + "px; height: " + square_size + "px; text-align: center; line-height: " + square_size + "px; -moz-box-shadow: inset 0 0 20px #555555; -webkit-box-shadow: inset 0 0 20px #555555; box-shadow: inset 0 0 20px #555555; background: #ffffff url(../Picture_Puzzle/assets/images/earth_img_600x600.jpg) " + (-(i % 4) * square_size) + "px " + -Math.floor(i / 4) * square_size + "px no-repeat !important'></div>");
                 }
                 // Empty up the 16th square, as the starting point
                 // EmptySquare = 16
@@ -60,30 +61,32 @@
                 var newx = $(clicked_square).css("left");
                 var newy = $(clicked_square).css("top");
                 // The clicked square is north of the empty square
-                if (oldx == newx && newy == (parseInt(oldy) - square_size) + 'px')
+                if (oldx == newx && newy == (parseInt(oldy) - square_size) + 'px'){
                     movable = true;
+                };
                 // The clicked square is south of the empty square
-                if (oldx == newx && newy == (parseInt(oldy) + square_size) + 'px')
+                if (oldx == newx && newy == (parseInt(oldy) + square_size) + 'px'){
                     movable = true;
+                };
                 // The clicked square is west of the empty square
-                if ((parseInt(oldx) - square_size) + 'px' == newx && newy == oldy)
+                if ((parseInt(oldx) - square_size) + 'px' == newx && newy == oldy){
                     movable = true;
+                };
                 // The clicked square is east of the empty square
-                if ((parseInt(oldx) + square_size) + 'px' == newx && newy == oldy)
+                if ((parseInt(oldx) + square_size) + 'px' == newx && newy == oldy){
                     movable = true;
-                if (movable)
-                {
+                };
+                if (movable){
                     // Increment zindex so the new tile is always on top of all others
                     $(clicked_square).css("z-index", zi++);
                     // Swap squares… Animate new square into old square position
-                    $(clicked_square).animate({ left: oldx, top: oldy }, 200, function()
-        {
+                    $(clicked_square).animate({ left: oldx, top: oldy }, 200, function(){
                         //Move old square into new square position
                         $("#board").children("div:nth-child(" + EmptySquare + ")").css("left", newx);
                         $("#board").children("div:nth-child(" + EmptySquare + ")").css("top", newy);
                     });
-                }
-            }
+                };
+            };
         // Ok, we're ready to initialize the game, let's do it.
         // Create a game with 150 by 150 squares inside "#target" div:
             $("#target").fifteen(150);
