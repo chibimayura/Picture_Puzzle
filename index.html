@@ -19,7 +19,10 @@
             // The index of the empty square by default, the 16th square
             var EmptySquare = 9;
 
+            //stores value to randomize the empty tile
             var randomEmpty = Math.floor(Math.random()*EmptySquare);
+
+            // stores the number of tiles
             var arrayLoc = [0,1,2,3,4,5,6,7,8];
 
             // Now, this is where we create the plugin and call it fifteen.
@@ -32,7 +35,10 @@
                 $(targetElement).html("<div id = 'board'></div>");
                 $("#board").css({ position:'absolute', width: boardSize, height: boardSize, border: '1px solid gray' });
                     // Populate the game board's HTML container with 15 squares
+
+                    //randomizes the array every game
                     arrayLoc.sort(function(a, b){return 0.5 - Math.random()});
+                    
                     for (var i = 0; i < EmptySquare; i++){
                     // A dirty way to create an arbitrary DIV and
                     // append it into HTML dynamically
