@@ -1,17 +1,32 @@
-<!DOCTYPE>
-
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>GIF Puzzle - jQuery Plugin</title>
-  <link rel="stylesheet" href="../Picture_Puzzle/assets/css/reset.css">
-  <style>
-      #hiddenImg{
-        display: none;
-        position: absolute;
-        z-index: 2;
-      }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>GIF Puzzle - jQuery Plugin</title>
+    <link rel="stylesheet" href="../Picture_Puzzle/assets/css/reset.css">
+    <style>
+        #hiddenImg{
+            display: none;
+            position: absolute;
+            z-index: 2;
+        }
 
-  </style>
+        .btn-primary {
+            padding: 10px 18px;
+            font-size: 15px;
+            font-weight: bolder;
+            border-radius: 5px;
+            background-color: teal;
+            color: white;
+            cursor: pointer;
+        }
+
+        .tiles{
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <form id='btns'>
@@ -20,175 +35,167 @@
         <button class="btn btn-primary" data-tileCount="5">Difficult</button>
         <button class="btn-primary" id="start">Start</button>
     </form>
+    <p class='msg'>Steps: <span id='steps'></span></p>
+    <p class='msg'>Time: <span id='time'></span></p>
     <img src="../Picture_Puzzle/assets/images/img_1000x600.jpg" alt="hidden" id="hiddenImg">
     <div id="target"></div>
+
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
-        // Initialize the game and create the plugin
-        // When the squares swap places, the moving square must always appear on top
-        var tileZindex = 1; 
-        var imgZindex = tileZindex + 1;
-        var tileWidth;
-        var tileHeight;
-        var tileCount;
-        var gameStarted = false;
-        var numHint = 5;
-        // We increment z-index each time a square is shifted
-        // The index of the empty square by default, the 16th square
-        var totalTiles;
-        // We set the empty tile
-        var randomEmptyTile;
-        // We set the sequence of tiles
-        var tileSequence = [];
-        // We captutre the width and height of the current image and tile
-        var imgWidth = parseInt($("#hiddenImg").css("width"));
-        var imgHeight = parseInt($("#hiddenImg").css("height"));
-
-        $.fn.extend({ sortedTiles:function(pieces){
-            // Grab the id of the HTML element into which we are placing the game,
-            // it is the selector - "#target" from  $("#target").sortedTiles(150);
-            var targetElement = "#" + $(this).attr("id");
-            tileWidth = Math.floor(imgWidth / pieces);
-            tileHeight = Math.floor(imgHeight / pieces);
-            totalTiles = tileCount*tileCount;
-            tileSequence = [];
-            for (var i=0; i<totalTiles; i++){
-                tileSequence.push(i);
-            }
-            randomEmptyTile = Math.ceil(Math.random() * totalTiles);
-            $(targetElement).html("<div id = 'board'></div>");
-            $("#board").css({ position:'absolute', width: imgWidth, height: imgHeight});
-                // Populate the game board's HTML container with 15 squares
-                for (var i = 0; i < totalTiles; i++){
-                // A dirty way to create an arbitrary DIV and
-                // append it into HTML dynamically
-                // Notice each square uses the same image earth_img_1000x600.jpg
-                // It just uses a different x/y offset for each square
-                $("#board").append("<div data-sequence = " + tileSequence[i] + " style = 'position: absolute; left: " + ((i % tileCount) * tileWidth) + "px; top: " + Math.floor(i / tileCount) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; -moz-box-shadow: inset 0 0 20px #555555; -webkit-box-shadow: inset 0 0 20px #555555; box-shadow: inset 0 0 20px #555555; background: #ffffff url(../Picture_Puzzle/assets/images/img_1000x600.jpg) " + (-(tileSequence[i] % tileCount) * tileWidth) + "px " + -Math.floor(tileSequence[i] / tileCount) * tileHeight + "px no-repeat !important'></div>");
-                }
-            }
-        });
-
-        // Now, this is where we create the plugin and call it createGame.
-        $.fn.extend({ createGame:function(pieces){
-            // Grab the id of the HTML element into which we are placing the game,
-            // it is the selector - "#target" from  $("#target").createGame(150);
-            var targetElement = "#" + $(this).attr("id");
-            tileWidth = Math.floor(imgWidth / pieces);
-            tileHeight = Math.floor(imgHeight / pieces);
-            totalTiles = tileCount*tileCount;
-            tileSequence = [];
-            for (var i=0; i<totalTiles; i++){
-                tileSequence.push(i);
-            }
-            randomEmptyTile = Math.ceil(Math.random() * totalTiles);
-            $(targetElement).html("<div id = 'board'></div>");
-            $("#board").css({ position:'absolute', width: imgWidth, height: imgHeight});
-                // Populate the game board's HTML container with 15 squares
-                tileSequence.sort(function(a, b){return 0.5 - Math.random()});
-                for (var i = 0; i < totalTiles; i++){
-                // A dirty way to create an arbitrary DIV and
-                // append it into HTML dynamically
-                // Notice each square uses the same image earth_img_1000x600.jpg
-                // It just uses a different x/y offset for each square
-                $("#board").append("<div data-sequence = " + tileSequence[i] + " style = 'position: absolute; left: " + ((i % tileCount) * tileWidth) + "px; top: " + Math.floor(i / tileCount) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; -moz-box-shadow: inset 0 0 20px #555555; -webkit-box-shadow: inset 0 0 20px #555555; box-shadow: inset 0 0 20px #555555; background: #ffffff url(../Picture_Puzzle/assets/images/img_1000x600.jpg) " + (-(tileSequence[i] % tileCount) * tileWidth) + "px " + -Math.floor(tileSequence[i] / tileCount) * tileHeight + "px no-repeat !important'></div>");
-            }
-            // Empty up the 16th square, as the starting point
-            // totalTiles = 16
-            $("#board").children("div:nth-child(" + randomEmptyTile + ")").css({backgroundImage: " ", background: "#ffffff"});
-            // Attach click event to each square
-            $("#board").children("div").click(function(){
-                Move(this, tileWidth, tileHeight);
+        $(document).ready(function(){
+            var config = {
+                apiKey: "AIzaSyButUq1u4dRUQGPjDtBJt0j2yQMVmWna7I",
+                authDomain: "picture-puzzle-31b40.firebaseapp.com",
+                databaseURL: "https://picture-puzzle-31b40.firebaseio.com",
+                projectId: "picture-puzzle-31b40",
+                storageBucket: "picture-puzzle-31b40.appspot.com",
+                messagingSenderId: "480871351650"
+            };
+            firebase.initializeApp(config);
+            var database = firebase.database();
+            var tileZindex = 1; 
+            var imgZindex = tileZindex + 1;
+            var tileWidth;
+            var tileHeight;
+            var tileCount;
+            var totalTiles;
+            var randomEmptyTile;
+            var tileSequence = [];
+            var imgWidth = parseInt($("#hiddenImg").css("width"));
+            var imgHeight = parseInt($("#hiddenImg").css("height"));
+            var gameStarted = false;
+            var numHint = 5;
+            var initialStep = 0;
+            var stepCount = initialStep;
+            database.ref("/inGameSteps").set({
+                playerSteps: stepCount
             });
-            }
-        });
 
-        // Move() is the function that is called when a square is clicked
-        // Note that it is independent of the plugin itself which is described above
-        // It takes two parameters,
-        //     1. object handle to the square that was clicked, and
-        //     2. the width of the square
-        function Move(clicked_square, tileWidth, tileHeight){
-        // We need to locate movable tiles based on where the empty spot is,
-        // We can only move the four surrounding squares
-            var movable = false;
-            // Swap x/y between the clicked square and the currently empty square
-            var oldx = $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("left");
-            var oldy = $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("top");
-            var newx = $(clicked_square).css("left");
-            var newy = $(clicked_square).css("top");
-            // The clicked square is north of the empty square
-            if (oldx == newx && newy == (parseInt(oldy) - tileHeight) + 'px'){
-                movable = true;
-            };
-            // The clicked square is south of the empty square
-            if (oldx == newx && newy == (parseInt(oldy) + tileHeight) + 'px'){
-                movable = true;
-            };
-            // The clicked square is west of the empty square
-            if ((parseInt(oldx) - tileWidth) + 'px' == newx && newy == oldy){
-                movable = true;
-            };
-            // The clicked square is east of the empty square
-            if ((parseInt(oldx) + tileWidth) + 'px' == newx && newy == oldy){
-                movable = true;
-            };
-            if (movable){
-                $("#hiddenImg").css("z-index", imgZindex++);
-                // Increment zindex so the new tile is always on top of all others
-                $(clicked_square).css("z-index", tileZindex++);
-                // Swap squares… Animate new square into old square position
-                $(clicked_square).animate({ left: oldx, top: oldy }, 200, function(){
-                    //Move old square into new square position
-                    $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("left", newx);
-                    $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("top", newy);
+            $.fn.extend({ sortedTiles:function(pieces){
+                var targetElement = "#" + $(this).attr("id");
+                tileWidth = Math.floor(imgWidth / pieces);
+                tileHeight = Math.floor(imgHeight / pieces);
+                totalTiles = tileCount*tileCount;
+                tileSequence = [];
+                for (var i=0; i<totalTiles; i++){
+                    tileSequence.push(i);
+                }
+                randomEmptyTile = Math.ceil(Math.random() * totalTiles);
+                $(targetElement).html("<div id = 'board'></div>");
+                $("#board").css({ position:'absolute', width: imgWidth, height: imgHeight});
+                    for (var i = 0; i < totalTiles; i++){
+                        $("#board").append("<div data-sequence = " + tileSequence[i] + " style = 'position: absolute; left: " + ((i % tileCount) * tileWidth) + "px; top: " + Math.floor(i / tileCount) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; -moz-box-shadow: inset 0 0 20px #555555; -webkit-box-shadow: inset 0 0 20px #555555; box-shadow: inset 0 0 20px #555555; background: #ffffff url(../Picture_Puzzle/assets/images/img_1000x600.jpg) " + (-(tileSequence[i] % tileCount) * tileWidth) + "px " + -Math.floor(tileSequence[i] / tileCount) * tileHeight + "px no-repeat !important'></div>");
+                    }
+                }
+            });
+
+            $.fn.extend({ createGame:function(pieces){
+                var targetElement = "#" + $(this).attr("id");
+                tileWidth = Math.floor(imgWidth / pieces);
+                tileHeight = Math.floor(imgHeight / pieces);
+                totalTiles = tileCount*tileCount;
+                tileSequence = [];
+                for (var i=0; i<totalTiles; i++){
+                    tileSequence.push(i);
+                }
+                randomEmptyTile = Math.ceil(Math.random() * totalTiles);
+                $(targetElement).html("<div id = 'board'></div>");
+                $("#board").css({ position:'absolute', width: imgWidth, height: imgHeight});
+                    tileSequence.sort(function(a, b){return 0.5 - Math.random()});
+                    for (var i = 0; i < totalTiles; i++){
+                        $("#board").append("<div class='tiles' data-sequence = " + tileSequence[i] + " style = 'position: absolute; left: " + ((i % tileCount) * tileWidth) + "px; top: " + Math.floor(i / tileCount) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; -moz-box-shadow: inset 0 0 20px #555555; -webkit-box-shadow: inset 0 0 20px #555555; box-shadow: inset 0 0 20px #555555; background: #ffffff url(../Picture_Puzzle/assets/images/img_1000x600.jpg) " + (-(tileSequence[i] % tileCount) * tileWidth) + "px " + -Math.floor(tileSequence[i] / tileCount) * tileHeight + "px no-repeat !important'></div>");
+                }
+                $("#board").children("div:nth-child(" + randomEmptyTile + ")").css({backgroundImage: " ", background: "#ffffff"});
+                $("#board").children("div").click(function(){
+                    Move(this, tileWidth, tileHeight);
                 });
+                }
+            });
+
+            function Move(clicked_square, tileWidth, tileHeight){
+                var movable = false;
+                var oldx = $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("left");
+                var oldy = $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("top");
+                var newx = $(clicked_square).css("left");
+                var newy = $(clicked_square).css("top");
+                if (oldx == newx && newy == (parseInt(oldy) - tileHeight) + 'px'){
+                    movable = true;
+                };
+                if (oldx == newx && newy == (parseInt(oldy) + tileHeight) + 'px'){
+                    movable = true;
+                };
+                if ((parseInt(oldx) - tileWidth) + 'px' == newx && newy == oldy){
+                    movable = true;
+                };
+                if ((parseInt(oldx) + tileWidth) + 'px' == newx && newy == oldy){
+                    movable = true;
+                };
+                if (movable){
+                    $("#hiddenImg").css("z-index", imgZindex++);
+                    $(clicked_square).css("z-index", tileZindex++);
+                    $(clicked_square).animate({ left: oldx, top: oldy }, 200, function(){
+                        $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("left", newx);
+                        $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("top", newy);
+                    });
+                    stepCount ++;
+                    database.ref("/inGameSteps").set({
+                        playerSteps: stepCount
+                    });
+                };
             };
-        };
-    // Ok, we're ready to initialize the game, let's do it.
-    // Create a game with 4 X 4 tiles inside "#target" div:
-    $(document).on("click", ".btn", function(){
-        event.preventDefault();
-        tileCount = parseInt($(this).attr("data-tileCount"));
-        $("#target").sortedTiles(tileCount);
-        return tileCount;
-    });
 
-    $(document).on("click", "#start", function(){
-        event.preventDefault();
-        if(tileCount != undefined && gameStarted === false){
-            $("#target").createGame(tileCount);
-            $(".btn").hide();
-            var newBTN = $("<button class='btn-primary' id='giveUp'>I GIVE UP!</button>");
-            var hintBTN = $("<button class='btn-primary' id='hint'>" + numHint + "hints</button>");
-            $("#btns").append(hintBTN, newBTN);
-            gameStarted = true;
-        }else if(tileCount == undefined){
-            alert("Select a difficulty!!!");
-        }
-    });
+            database.ref("/inGameSteps").on("value", function(snapshot) {
+                stepCount = snapshot.val().playerSteps;
+                $("#steps").text(snapshot.val().playerSteps);
+                // $("#steps").text(stepCount);
+                }, function(errorObject) {
+                console.log("The read failed: " + errorObject.code);
+            });
 
-    $(document).on("click", "#giveUp", function(){
-        event.preventDefault();
-    });
+            $(document).on("click", ".btn", function(){
+                event.preventDefault();
+                tileCount = parseInt($(this).attr("data-tileCount"));
+                $("#target").sortedTiles(tileCount);
+                return tileCount;
+            });
 
-    $(document).on("click", "#hint", function (){
-        event.preventDefault();
-        if(numHint > 1){
-            $("#hiddenImg").fadeIn(1000);
-            $("#hiddenImg").delay(2000).fadeOut(1000);
-            numHint--;
-            $("#hint").text(numHint + "hints");
-        }else if (numHint > 0){
-            $("#hiddenImg").fadeIn(1000);
-            $("#hiddenImg").delay(2000).fadeOut(1000);
-            numHint--;
-            $("#hint").text(numHint + "hint");
-        }else{
-            alert("Show me your money");
-        }
-    });
+            $(document).on("click", "#start", function(){
+                event.preventDefault();
+                if(tileCount != undefined && gameStarted === false){
+                    $("#target").createGame(tileCount);
+                    $(".btn").hide();
+                    var newBTN = $("<button class='btn-primary' id='giveUp'>I GIVE UP!</button>");
+                    var hintBTN = $("<button class='btn-primary' id='hint'>" + numHint + "hints</button>");
+                    $("#btns").append(hintBTN, newBTN);
+                    gameStarted = true;
+                    stepCount = initialStep;
+                }else if(tileCount == undefined){
+                    alert("Select a difficulty!!!");
+                }
+            });
+
+            $(document).on("click", "#giveUp", function(){
+                event.preventDefault();
+            });
+
+            $(document).on("click", "#hint", function (){
+                event.preventDefault();
+                if(numHint > 1){
+                    $("#hiddenImg").fadeIn(1000);
+                    $("#hiddenImg").delay(2000).fadeOut(1000);
+                    numHint--;
+                    $("#hint").text(numHint + "hints");
+                }else if (numHint > 0){
+                    $("#hiddenImg").fadeIn(1000);
+                    $("#hiddenImg").delay(2000).fadeOut(1000);
+                    numHint--;
+                    $("#hint").text(numHint + "hint");
+                }else{
+                    alert("Show me your money");
+                }
+            });
+        });
     </script>
 </body>
 </html>
