@@ -230,9 +230,11 @@ $(document).on("click", "#restart", function(){
         minute = 0;
         $("#second").text("0" + second);
         $("#minute").text("0" + minute);
+        stepCount = initialStep;
+        stepsText.text(stepCount);
         target.createGame(tileCount);
     }
-})
+});
 
 $(document).on("click", "#giveUp", function(){
     event.preventDefault();
