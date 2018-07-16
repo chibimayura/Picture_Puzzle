@@ -203,17 +203,19 @@ $(document).on("click", "#giveUp", function(){
 
 $(document).on("click", "#hint", function (){
     event.preventDefault();
-    if(numHint > 1){
-        $("#hiddenImg").fadeIn(1000);
-        $("#hiddenImg").delay(2000).fadeOut(1000);
-        numHint--;
-        $("#hint").text(numHint + " hints");
-    }else if (numHint > 0){
-        $("#hiddenImg").fadeIn(1000);
-        $("#hiddenImg").delay(2000).fadeOut(1000);
-        numHint--;
-        $("#hint").text(numHint + " hint");
-    }else{
-        alert("Show me your money");
+    if (gameStarted == true){
+        if(numHint > 1){
+            $("#hiddenImg").fadeIn(1000);
+            $("#hiddenImg").delay(2000).fadeOut(1000);
+            numHint--;
+            $("#hint").text(numHint + " hints");
+        }else if (numHint > 0){
+            $("#hiddenImg").fadeIn(1000);
+            $("#hiddenImg").delay(2000).fadeOut(1000);
+            numHint--;
+            $("#hint").text(numHint + " hint");
+        }else{
+            alert("Show me your money");
+        }
     }
 });
