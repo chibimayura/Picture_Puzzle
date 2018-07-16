@@ -79,7 +79,7 @@ connectionsRef.on("value", function(snap) {
 });
 
 $.fn.extend({ sortedTiles:function(pieces){
-    $("#target").empty();
+    target.empty();
     var targetElement = "#" + $(this).attr("id");
     tileWidth = Math.floor(imgWidth / pieces);
     tileHeight = Math.floor(imgHeight / pieces);
@@ -98,7 +98,7 @@ $.fn.extend({ sortedTiles:function(pieces){
 });
 
 $.fn.extend({ createGame:function(pieces){
-    $("#target").empty();
+    target.empty();
     stepCount = initialStep;
     secondInterval = setInterval(timerSecond, 1000);
     gameStarted = true;
