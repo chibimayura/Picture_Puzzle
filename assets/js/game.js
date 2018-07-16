@@ -73,15 +73,15 @@ $.fn.extend({ createGame:function(pieces){
     totalTiles = tileCount*tileCount;
     tileSequence = [];
     for (var i=0; i<totalTiles; i++){
-        tileSequence.push(i);
+        tileSequence.push({"tileNumber" : i, "left" : ((i % tileCount) * tileWidth) + "px", "top" : Math.floor(i / tileCount) * tileHeight + "px"});
     }
     randomEmptyTile = Math.ceil(Math.random() * totalTiles);
     $(targetElement).html("<div id = 'board'></div>");
     $("#board").css({ position:'absolute', width: imgWidth, height: imgHeight});
         tileSequence.sort(function(a, b){return 0.5 - Math.random()});
         for (var i = 0; i < totalTiles; i++){
-            $("#board").append("<div class='tiles' data-sequence = " + tileSequence[i] + " style = 'position: absolute; left: " + ((i % tileCount) * tileWidth) + "px; top: " + Math.floor(i / tileCount) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; background: #ffffff url(../Picture_Puzzle/assets/images/img_1000x600.jpg) " + (-(tileSequence[i] % tileCount) * tileWidth) + "px " + -Math.floor(tileSequence[i] / tileCount) * tileHeight + "px no-repeat !important'></div>");
-    }
+            $("#board").append("<div class='tiles' data-sequence = " + tileSequence[i].tileNumber + " positionleft = " + tileSequence[i].left + " positiontop = " + tileSequence[i].top  + "  style = 'position: absolute; left: " + ((i % tileCount) * tileWidth) + "px; top: " + Math.floor(i / tileCount) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; -moz-box-shadow: inset 0 0 20px #555555; -webkit-box-shadow: inset 0 0 20px #555555; box-shadow: inset 0 0 20px #555555; background: #ffffff url(../Picture_Puzzle/assets/images/img_1000x600.jpg) " + (-(tileSequence[i].tileNumber % tileCount) * tileWidth) + "px " + -Math.floor(tileSequence[i].tileNumber / tileCount) * tileHeight + "px no-repeat !important'></div>");
+        }
     $("#board").children("div:nth-child(" + randomEmptyTile + ")").css({backgroundImage: " ", background: "#ffffff"});
     $("#board").children("div").click(function(){
         if (gameStarted = true){
@@ -120,8 +120,30 @@ function Move(clicked_square, tileWidth, tileHeight){
         });
         stepCount ++;
         $("#steps").text(stepCount);
+
+        completionChecker();
     };
 };
+
+// ref on the info:
+// positionleft:                     
+// $('#board').children()["0"].attributes[2].value;
+// positiontop:
+// $('#board' ).children()["0"].attributes[3].value;
+
+// style left:
+// $('#board').children()["0"].style.left;
+// style top:
+// $('#board').children()["0"].style.top;
+
+function completionChecker () {
+    for (var i = 0; i < $('#board' ).children().length; i++) {
+
+        if ($('#board').children()[i].attributes[2].value == $('#board').children()[i].style.left && $('#board').children()[i].attributes[3].value == $('#board').children()[i].style.top) {
+            // alert('yay!');
+        }
+    }
+} 
 
 function timerSecond(){
     second ++;
@@ -154,7 +176,7 @@ $(document).on("click", "#start", function(){
         $("#target").createGame(tileCount);
         $(".btn").hide();
         var newBTN = $("<button class='btn-primary' id='giveUp'>I GIVE UP!</button>");
-        var hintBTN = $("<button class='btn-primary' id='hint'>" + numHint + "hints</button>");
+        var hintBTN = $("<button class='btn-primary' id='hint'>" + numHint + " hints</button>");
         $("#btns").append(hintBTN, newBTN);
         stepCount = initialStep;
         secondInterval = setInterval(timerSecond, 1000);
@@ -185,12 +207,12 @@ $(document).on("click", "#hint", function (){
         $("#hiddenImg").fadeIn(1000);
         $("#hiddenImg").delay(2000).fadeOut(1000);
         numHint--;
-        $("#hint").text(numHint + "hints");
+        $("#hint").text(numHint + " hints");
     }else if (numHint > 0){
         $("#hiddenImg").fadeIn(1000);
         $("#hiddenImg").delay(2000).fadeOut(1000);
         numHint--;
-        $("#hint").text(numHint + "hint");
+        $("#hint").text(numHint + " hint");
     }else{
         alert("Show me your money");
     }
