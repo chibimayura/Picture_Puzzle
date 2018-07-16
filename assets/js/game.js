@@ -103,8 +103,8 @@ $.fn.extend({ createGame:function(pieces){
     secondInterval = setInterval(timerSecond, 1000);
     gameStarted = true;
     $(".btn-primary").hide();
-    var giveupBTN = $("<button class='btn-primary' id='giveUp'>I GIVE UP!</button>");
-    var hintBTN = $("<button class='btn-primary' id='hint'>" + numHint + " hints</button>");
+    var giveupBTN = $("<button class='newButtonSpacing btn btn-primary' id='giveUp'>I GIVE UP!</button>");
+    var hintBTN = $("<button class='newButtonSpacing btn btn-primary' id='hint'>" + numHint + " hints</button>");
     var restartBTN = $("<button class='btn-primary' id='restart'>Restart</button>")
     $("#btns").append(restartBTN, hintBTN, giveupBTN);
     var targetElement = "#" + $(this).attr("id");
@@ -173,8 +173,8 @@ function completionChecker () {
         if (correctTileCount == totalTiles){
             alert("yay!");
             clearInterval(secondInterval);
-            currentMin = $("#minute").text();
-            currentSec = $("#second").text();
+            currentMin = minuteText.text();
+            currentSec = secondText.text();
             database.ref("/timeRecords").set({
                 lastCompletedTime : currentMin + " : " + currentSec
             });
@@ -214,7 +214,7 @@ $(document).on("click", ".difficulty", function(){
 $(document).on("click", "#start", function(){
     event.preventDefault();
     if(tileCount != undefined && gameStarted === false){
-        $("#target").createGame(tileCount);
+        target.createGame(tileCount);
     }else if(tileCount == undefined){
         alert("Select a difficulty!!!");
     }
@@ -223,7 +223,7 @@ $(document).on("click", "#start", function(){
 $(document).on("click", "#restart", function(){
     event.preventDefault();
     if(confirm("Are you sure?")){
-        $("#target").createGame(tileCount);
+        target.createGame(tileCount);
     }
 })
 
