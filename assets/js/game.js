@@ -68,6 +68,14 @@ $.fn.extend({ sortedTiles:function(pieces){
 
 $.fn.extend({ createGame:function(pieces){
     $("#target").empty();
+    stepCount = initialStep;
+    secondInterval = setInterval(timerSecond, 1000);
+    gameStarted = true;
+    $(".btn-primary").hide();
+    var giveupBTN = $("<button class='btn-primary' id='giveUp'>I GIVE UP!</button>");
+    var hintBTN = $("<button class='btn-primary' id='hint'>" + numHint + " hints</button>");
+    var restartBTN = $("<button class='btn-primary' id='restart'>Restart</button>")
+    $("#btns").append(restartBTN, hintBTN, giveupBTN);
     var targetElement = "#" + $(this).attr("id");
     tileWidth = Math.floor(imgWidth / pieces);
     tileHeight = Math.floor(imgHeight / pieces);
@@ -187,17 +195,17 @@ $(document).on("click", "#start", function(){
     event.preventDefault();
     if(tileCount != undefined && gameStarted === false){
         $("#target").createGame(tileCount);
-        $(".btn").hide();
-        var newBTN = $("<button class='btn-primary' id='giveUp'>I GIVE UP!</button>");
-        var hintBTN = $("<button class='btn-primary' id='hint'>" + numHint + " hints</button>");
-        $("#btns").append(hintBTN, newBTN);
-        stepCount = initialStep;
-        secondInterval = setInterval(timerSecond, 1000);
-        gameStarted = true;
     }else if(tileCount == undefined){
         alert("Select a difficulty!!!");
     }
 });
+
+$(document).on("click", "#restart", function(){
+    event.preventDefault();
+    if(confirm("Are you sure?")){
+        $("#target").createGame(tileCount);
+    }
+})
 
 $(document).on("click", "#giveUp", function(){
     event.preventDefault();
