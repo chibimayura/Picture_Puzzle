@@ -35,9 +35,12 @@
         <button class="btn btn-primary" data-tileCount="5">Difficult</button>
         <button class="btn-primary" id="start">Start</button>
     </form>
-    <p class='msg'>Steps: <span id='steps'></span></p>
-    <p class='msg'>Time: <span id='time'></span></p>
-    <img src="../Picture_Puzzle/assets/images/img_1000x600.jpg" alt="hidden" id="hiddenImg">
+    <div id='msgBoard'>
+        <p class='msg'><span id='numPlayers'></span> people currently playing</p>
+        <p class='msg'>Steps: <span id='steps'></span></p>
+        <p class='msg'>Time: <span id="minute"></span> : <span id="second"></span></p>
+        <img src="../Picture_Puzzle/assets/images/img_1000x600.jpg" alt="hidden" id="hiddenImg">
+    </div>
     <div id="target"></div>
 
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
@@ -54,6 +57,9 @@
             };
             firebase.initializeApp(config);
             var database = firebase.database();
+            var connectionsRef = database.ref("/connections");
+            var connectedRef = database.ref(".info/connected");
+            var playerDataRef = database.ref("/playerData");
             var tileZindex = 1; 
             var imgZindex = tileZindex + 1;
             var tileWidth;
@@ -64,12 +70,37 @@
             var tileSequence = [];
             var imgWidth = parseInt($("#hiddenImg").css("width"));
             var imgHeight = parseInt($("#hiddenImg").css("height"));
+            var minute = 0;
+            var second = 0;
+            var minuteRecord;
+            var secondRecord;
+            var secondInterval;            
             var gameStarted = false;
             var numHint = 5;
             var initialStep = 0;
             var stepCount = initialStep;
-            database.ref("/inGameSteps").set({
+            
+            $("#second").text("0" + second);
+            $("#minute").text("0" + minute);
+
+
+            playerDataRef.set({
                 playerSteps: stepCount
+            });
+
+            connectedRef.on("value", function(snap) {
+                if (snap.val()) {
+                    var con = connectionsRef.push(true);
+                    con.onDisconnect().remove();
+                    playerDataRef.push({
+                        currentSteps: stepCount,
+                        dateAdded: firebase.database.ServerValue.TIMESTAMP
+                    });
+                }
+            });
+
+            connectionsRef.on("value", function(snap) {
+                $("#numPlayers").text(snap.numChildren());
             });
 
             $.fn.extend({ sortedTiles:function(pieces){
@@ -139,19 +170,37 @@
                         $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("top", newy);
                     });
                     stepCount ++;
-                    database.ref("/inGameSteps").set({
+                    playerDataRef.set({
                         playerSteps: stepCount
                     });
                 };
             };
 
-            database.ref("/inGameSteps").on("value", function(snapshot) {
+            playerDataRef.on("value", function(snapshot) {
                 stepCount = snapshot.val().playerSteps;
                 $("#steps").text(snapshot.val().playerSteps);
                 // $("#steps").text(stepCount);
                 }, function(errorObject) {
                 console.log("The read failed: " + errorObject.code);
             });
+
+            function timerSecond(){
+                second ++;
+                if(second < 10){
+                    $("#second").text("0" + second);
+                }else if(second<60){
+                    $("#second").text(second);
+                }else{
+                    minute ++;
+                    second = 0;
+                    $("#second").text("0" + second);
+                    if(minute < 10){
+                        $("#minute").text("0" + minute);
+                    }else{
+                        $("#minute").text(minute);
+                    };    
+                };
+            };
 
             $(document).on("click", ".btn", function(){
                 event.preventDefault();
@@ -170,6 +219,7 @@
                     $("#btns").append(hintBTN, newBTN);
                     gameStarted = true;
                     stepCount = initialStep;
+                    secondInterval = setInterval(timerSecond, 1000);
                 }else if(tileCount == undefined){
                     alert("Select a difficulty!!!");
                 }
@@ -177,6 +227,10 @@
 
             $(document).on("click", "#giveUp", function(){
                 event.preventDefault();
+                clearInterval(secondInterval);
+                currentMin = $("#minute").text();
+                currentSec = $("#second").text();
+                $("#msgBoard").append(currentMin + " : " + currentSec + "<br>");
             });
 
             $(document).on("click", "#hint", function (){
