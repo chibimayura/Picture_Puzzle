@@ -18,9 +18,9 @@ var playerDataRef = database.ref("/playerData");
 // html selectors
 var puzzleBoard = $("#board");
 var target = $("#target");
-var minute = $("#minute");
-var second = $("#second");
-var steps = $("#steps");
+var minuteText = $("#minute");
+var secondText = $("#second");
+var stepsText = $("#steps");
 var hiddenImage = $("#hiddenImg");
 
 // stores width and height of tiles
@@ -57,14 +57,14 @@ var initialStep = 0;
 var stepCount = initialStep;
 
 // stores puzzle image src
-var puzzleImage = "assets/images/img_1000x600.jpg";
+var puzzleImage = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Hamster_057eue.jpg/1200px-Hamster_057eue.jpg";
 var defaultPuzzle = $("<img id='hiddenImg' alt='hidden'>").attr("src", puzzleImage);
-// $("#msgBoard").append(defaultPuzzle);
+$("#msgBoard").append(defaultPuzzle);
 
 // text Selector for time and steps
-second.text("0" + second);
-minute.text("0" + minute);
-steps.text(stepCount);
+secondText.text("0" + second);
+minuteText.text("0" + minute);
+stepsText.text(stepCount);
 
 connectedRef.on("value", function(snap) {
     if (snap.val()) {
@@ -151,7 +151,7 @@ function Move(clicked_square, tileWidth, tileHeight){
            setTimeout(completionChecker, 100);
        });
        stepCount ++;
-       steps.text(stepCount);
+       stepsText.text(stepCount);
    };
 };
 
@@ -170,17 +170,17 @@ function completionChecker () {
 function timerSecond(){
     second ++;
     if(second < 10){
-        second.text("0" + second);
+        secondText.text("0" + second);
     }else if(second<60){
-        second.text(second);
+        secondText.text(second);
     }else{
         minute ++;
         second = 0;
-        second.text("0" + second);
+        secondText.text("0" + second);
         if(minute < 10){
-            minute.text("0" + minute);
+            minuteText.text("0" + minute);
         }else{
-            minute.text(minute);
+            minuteText.text(minute);
         };    
     };
 };
@@ -211,8 +211,8 @@ $(document).on("click", "#start", function(){
 $(document).on("click", "#giveUp", function(){
     event.preventDefault();
     clearInterval(secondInterval);
-    currentMin = minute.text();
-    currentSec = second.text();
+    currentMin = minuteText.text();
+    currentSec = secondText.text();
     database.ref("/timeRecords").set({
         lastRecordedTime : currentMin + " : " + currentSec
     });
