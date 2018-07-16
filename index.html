@@ -83,19 +83,10 @@
             $("#second").text("0" + second);
             $("#minute").text("0" + minute);
 
-
-            playerDataRef.set({
-                playerSteps: stepCount
-            });
-
             connectedRef.on("value", function(snap) {
                 if (snap.val()) {
                     var con = connectionsRef.push(true);
                     con.onDisconnect().remove();
-                    playerDataRef.push({
-                        currentSteps: stepCount,
-                        dateAdded: firebase.database.ServerValue.TIMESTAMP
-                    });
                 }
             });
 
@@ -170,19 +161,9 @@
                         $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("top", newy);
                     });
                     stepCount ++;
-                    playerDataRef.set({
-                        playerSteps: stepCount
-                    });
+                    $("#steps").text(stepCount);
                 };
             };
-
-            playerDataRef.on("value", function(snapshot) {
-                stepCount = snapshot.val().playerSteps;
-                $("#steps").text(snapshot.val().playerSteps);
-                // $("#steps").text(stepCount);
-                }, function(errorObject) {
-                console.log("The read failed: " + errorObject.code);
-            });
 
             function timerSecond(){
                 second ++;
@@ -230,7 +211,12 @@
                 clearInterval(secondInterval);
                 currentMin = $("#minute").text();
                 currentSec = $("#second").text();
-                $("#msgBoard").append(currentMin + " : " + currentSec + "<br>");
+                database.ref("/timeRecords").set({
+                    lastRecordedTime : currentMin + " : " + currentSec
+                });
+                database.ref("/stepRecords").set({
+                    lastRecordedStep : stepCount
+                });                
             });
 
             $(document).on("click", "#hint", function (){
