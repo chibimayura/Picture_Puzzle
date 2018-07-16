@@ -5,244 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>GIF Puzzle - jQuery Plugin</title>
+    <!-- resets css style -->
     <link rel="stylesheet" href="../Picture_Puzzle/assets/css/reset.css">
-    <style>
-        #hiddenImg{
-            display: none;
-            position: absolute;
-            z-index: 2;
-        }
-
-        .btn-primary {
-            padding: 10px 18px;
-            font-size: 15px;
-            font-weight: bolder;
-            border-radius: 5px;
-            background-color: teal;
-            color: white;
-            cursor: pointer;
-        }
-
-        .tiles{
-            cursor: pointer;
-        }
-    </style>
+    <!-- bootstrap css styling -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <!-- custom css -->
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
 </head>
 <body>
-    <form id='btns'>
-        <button class="difficulty btn btn-primary" data-tileCount="3">Easy</button>
-        <button class="difficulty btn btn-primary" data-tileCount="4">Medium</button>
-        <button class="difficulty btn btn-primary" data-tileCount="5">Difficult</button>
-        <button class="btn-primary" id="start">Start</button>
-    </form>
-    <div id='msgBoard'>
-        <p class='msg'><span id='numPlayers'></span> people currently playing</p>
-        <p class='msg'>Steps: <span id='steps'></span></p>
-        <p class='msg'>Time: <span id="minute"></span> : <span id="second"></span></p>
-        <img src="../Picture_Puzzle/assets/images/img_1000x600.jpg" alt="hidden" id="hiddenImg">
+    <!-- sidebar to allow users to search, store and look at recommended puzzles -->
+    <div class="sidebar">
+        <!-- navigation for tabs -->
+        <nav class="ml-2 my-2">
+          <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link active" id="nav-search-tab" data-toggle="tab" href="#nav-search" role="tab" aria-controls="nav-search" aria-selected="true">Search</a>
+            <a class="nav-item nav-link" id="nav-saved-tab" data-toggle="tab" href="#nav-saved" role="tab" aria-controls="nav-saved" aria-selected="false">Saved</a>
+            <a class="nav-item nav-link" id="nav-suggestion-tab" data-toggle="tab" href="#nav-suggestion" role="tab" aria-controls="nav-suggestion" aria-selected="false">Suggestion</a>
+          </div>
+        </nav>
+
+        <!-- content inside tabs -->
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-search" role="tabpanel" aria-labelledby="nav-search-tab">
+                search bar
+                <br>
+                display search stuff
+            </div>
+            <div class="tab-pane fade" id="nav-saved" role="tabpanel" aria-labelledby="nav-saved-tab">
+                saved stuff from search
+            </div>
+            <div class="tab-pane fade" id="nav-suggestion" role="tabpanel" aria-labelledby="nav-suggestion-tab">
+                recommended puzzles to play
+            </div>
+        </div>
     </div>
-    <div id="target"></div>
+
+    <!-- game area centered to the rest of the page -->
+    <div class="game text-center m-auto">
+        <!-- navigation for tabs -->
+        <nav class="my-2">
+          <div class="nav justify-content-center nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link active" id="nav-game-tab" data-toggle="tab" href="#nav-game" role="tab" aria-controls="nav-game" aria-selected="true">Puzzle</a>
+            <a class="nav-item nav-link" id="nav-completed-tab" data-toggle="tab" href="#nav-completed" role="tab" aria-controls="nav-completed" aria-selected="false">Completed</a>
+            <a class="nav-item nav-link" id="nav-ranking-tab" data-toggle="tab" href="#nav-ranking" role="tab" aria-controls="nav-ranking" aria-selected="false">Ranking</a>
+          </div>
+        </nav>
+
+        <!-- content inside tabs -->
+        <div class="tab-content" id="nav-tabContent">
+            <!-- Game Content -->
+            <div class="tab-pane fade show active" id="nav-game" role="tabpanel" aria-labelledby="nav-game-tab">
+                <form id='btns'>
+                    <button class="difficulty btn btn-primary" data-tileCount="3">Easy</button>
+                    <button class="difficulty btn btn-primary" data-tileCount="4">Medium</button>
+                    <button class="difficulty btn btn-primary" data-tileCount="5">Difficult</button>
+                    <button class="btn btn-primary" id="start">Start</button>
+                </form>
+                <div id='msgBoard'>
+                    <p class='msg'><span id='numPlayers'></span> people currently playing</p>
+                    <p class='msg'>Steps: <span id='steps'></span></p>
+                    <p class='msg'>Time: <span id="minute"></span> : <span id="second"></span></p>
+                    <img src="../Picture_Puzzle/assets/images/img_1000x600.jpg" alt="hidden" id="hiddenImg">
+                </div>
+                <div id="target"></div>
+            </div>
+
+            <div class="tab-pane fade" id="nav-completed" role="tabpanel" aria-labelledby="nav-completed-tab">
+                You haven't completed any games yet
+            </div>
+            <div class="tab-pane fade" id="nav-ranking" role="tabpanel" aria-labelledby="nav-ranking-tab">
+                Ranking display
+            </div>
+        </div>
+    </div>
 
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script type="text/javascript">
-        var config = {
-            apiKey: "AIzaSyButUq1u4dRUQGPjDtBJt0j2yQMVmWna7I",
-            authDomain: "picture-puzzle-31b40.firebaseapp.com",
-            databaseURL: "https://picture-puzzle-31b40.firebaseio.com",
-            projectId: "picture-puzzle-31b40",
-            storageBucket: "picture-puzzle-31b40.appspot.com",
-            messagingSenderId: "480871351650"
-        };
-        firebase.initializeApp(config);
-        var database = firebase.database();
-        var connectionsRef = database.ref("/connections");
-        var connectedRef = database.ref(".info/connected");
-        var playerDataRef = database.ref("/playerData");
-        var tileZindex = 1; 
-        var imgZindex = tileZindex + 1;
-        var tileWidth;
-        var tileHeight;
-        var tileCount;
-        var totalTiles;
-        var randomEmptyTile;
-        var tileSequence = [];
-        var imgWidth = parseInt($("#hiddenImg").css("width"));
-        var imgHeight = parseInt($("#hiddenImg").css("height"));
-        var minute = 0;
-        var second = 0;
-        var minuteRecord;
-        var secondRecord;
-        var secondInterval;            
-        var gameStarted = false;
-        var numHint = 5;
-        var initialStep = 0;
-        var stepCount = initialStep;
-        
-        $("#second").text("0" + second);
-        $("#minute").text("0" + minute);
-        $("#steps").text(stepCount);        
+    <script src="assets/js/game.js"></script>
 
-        connectedRef.on("value", function(snap) {
-            if (snap.val()) {
-                var con = connectionsRef.push(true);
-                con.onDisconnect().remove();
-            }
-        });
-
-        connectionsRef.on("value", function(snap) {
-            $("#numPlayers").text(snap.numChildren());
-        });
-
-        $.fn.extend({ sortedTiles:function(pieces){
-            $("#target").empty();
-            var targetElement = "#" + $(this).attr("id");
-            tileWidth = Math.floor(imgWidth / pieces);
-            tileHeight = Math.floor(imgHeight / pieces);
-            totalTiles = tileCount*tileCount;
-            tileSequence = [];
-            for (var i=0; i<totalTiles; i++){
-                tileSequence.push(i);
-            }
-            randomEmptyTile = Math.ceil(Math.random() * totalTiles);
-            $(targetElement).html("<div id = 'board'></div>");
-            $("#board").css({ position:'absolute', width: imgWidth, height: imgHeight});
-                for (var i = 0; i < totalTiles; i++){
-                    $("#board").append("<div data-sequence = " + tileSequence[i] + " style = 'position: absolute; left: " + ((i % tileCount) * tileWidth) + "px; top: " + Math.floor(i / tileCount) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; -moz-box-shadow: inset 0 0 20px #555555; -webkit-box-shadow: inset 0 0 20px #555555; box-shadow: inset 0 0 20px #555555; background: #ffffff url(../Picture_Puzzle/assets/images/img_1000x600.jpg) " + (-(tileSequence[i] % tileCount) * tileWidth) + "px " + -Math.floor(tileSequence[i] / tileCount) * tileHeight + "px no-repeat !important'></div>");
-                }
-            }
-        });
-
-        $.fn.extend({ createGame:function(pieces){
-            $("#target").empty();
-            var targetElement = "#" + $(this).attr("id");
-            tileWidth = Math.floor(imgWidth / pieces);
-            tileHeight = Math.floor(imgHeight / pieces);
-            totalTiles = tileCount*tileCount;
-            tileSequence = [];
-            for (var i=0; i<totalTiles; i++){
-                tileSequence.push(i);
-            }
-            randomEmptyTile = Math.ceil(Math.random() * totalTiles);
-            $(targetElement).html("<div id = 'board'></div>");
-            $("#board").css({ position:'absolute', width: imgWidth, height: imgHeight});
-                tileSequence.sort(function(a, b){return 0.5 - Math.random()});
-                for (var i = 0; i < totalTiles; i++){
-                    $("#board").append("<div class='tiles' data-sequence = " + tileSequence[i] + " style = 'position: absolute; left: " + ((i % tileCount) * tileWidth) + "px; top: " + Math.floor(i / tileCount) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; -moz-box-shadow: inset 0 0 20px #555555; -webkit-box-shadow: inset 0 0 20px #555555; box-shadow: inset 0 0 20px #555555; background: #ffffff url(../Picture_Puzzle/assets/images/img_1000x600.jpg) " + (-(tileSequence[i] % tileCount) * tileWidth) + "px " + -Math.floor(tileSequence[i] / tileCount) * tileHeight + "px no-repeat !important'></div>");
-            }
-            $("#board").children("div:nth-child(" + randomEmptyTile + ")").css({backgroundImage: " ", background: "#ffffff"});
-            $("#board").children("div").click(function(){
-                if (gameStarted = true){
-                    Move(this, tileWidth, tileHeight);
-                }else{
-                    return gameStarted = false;
-                }
-            });
-            }
-        });
-
-        function Move(clicked_square, tileWidth, tileHeight){
-            var movable = false;
-            var oldx = $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("left");
-            var oldy = $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("top");
-            var newx = $(clicked_square).css("left");
-            var newy = $(clicked_square).css("top");
-            if (oldx == newx && newy == (parseInt(oldy) - tileHeight) + 'px'){
-                movable = true;
-            };
-            if (oldx == newx && newy == (parseInt(oldy) + tileHeight) + 'px'){
-                movable = true;
-            };
-            if ((parseInt(oldx) - tileWidth) + 'px' == newx && newy == oldy){
-                movable = true;
-            };
-            if ((parseInt(oldx) + tileWidth) + 'px' == newx && newy == oldy){
-                movable = true;
-            };
-            if (movable){
-                $("#hiddenImg").css("z-index", imgZindex++);
-                $(clicked_square).css("z-index", tileZindex++);
-                $(clicked_square).animate({ left: oldx, top: oldy }, 200, function(){
-                    $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("left", newx);
-                    $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("top", newy);
-                });
-                stepCount ++;
-                $("#steps").text(stepCount);
-            };
-        };
-
-        function timerSecond(){
-            second ++;
-            if(second < 10){
-                $("#second").text("0" + second);
-            }else if(second<60){
-                $("#second").text(second);
-            }else{
-                minute ++;
-                second = 0;
-                $("#second").text("0" + second);
-                if(minute < 10){
-                    $("#minute").text("0" + minute);
-                }else{
-                    $("#minute").text(minute);
-                };    
-            };
-        };
-
-        $(document).on("click", ".difficulty", function(){
-            event.preventDefault();
-            tileCount = parseInt($(this).attr("data-tileCount"));
-            $("#target").sortedTiles(tileCount);
-            return tileCount;
-        });
-
-        $(document).on("click", "#start", function(){
-            event.preventDefault();
-            if(tileCount != undefined && gameStarted === false){
-                $("#target").createGame(tileCount);
-                $(".btn").hide();
-                var newBTN = $("<button class='btn-primary' id='giveUp'>I GIVE UP!</button>");
-                var hintBTN = $("<button class='btn-primary' id='hint'>" + numHint + "hints</button>");
-                $("#btns").append(hintBTN, newBTN);
-                stepCount = initialStep;
-                secondInterval = setInterval(timerSecond, 1000);
-                gameStarted = true;
-            }else if(tileCount == undefined){
-                alert("Select a difficulty!!!");
-            }
-        });
-
-        $(document).on("click", "#giveUp", function(){
-            event.preventDefault();
-            clearInterval(secondInterval);
-            currentMin = $("#minute").text();
-            currentSec = $("#second").text();
-            database.ref("/timeRecords").set({
-                lastRecordedTime : currentMin + " : " + currentSec
-            });
-            database.ref("/stepRecords").set({
-                lastRecordedStep : stepCount
-            });
-            gameStarted = false;
-            $("#target").sortedTiles(tileCount);
-        });
-
-        $(document).on("click", "#hint", function (){
-            event.preventDefault();
-            if(numHint > 1){
-                $("#hiddenImg").fadeIn(1000);
-                $("#hiddenImg").delay(2000).fadeOut(1000);
-                numHint--;
-                $("#hint").text(numHint + "hints");
-            }else if (numHint > 0){
-                $("#hiddenImg").fadeIn(1000);
-                $("#hiddenImg").delay(2000).fadeOut(1000);
-                numHint--;
-                $("#hint").text(numHint + "hint");
-            }else{
-                alert("Show me your money");
-            }
-        });
-    </script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
+    
 </body>
 </html>
