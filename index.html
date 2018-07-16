@@ -15,32 +15,68 @@
 <body>
     <!-- sidebar to allow users to search, store and look at recommended puzzles -->
     <div class="sidebar">
-        <nav>
+        <!-- navigation for tabs -->
+        <nav class="ml-2 my-2">
           <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Home</a>
-            <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Profile</a>
-            <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</a>
+            <a class="nav-item nav-link active" id="nav-search-tab" data-toggle="tab" href="#nav-search" role="tab" aria-controls="nav-search" aria-selected="true">Search</a>
+            <a class="nav-item nav-link" id="nav-saved-tab" data-toggle="tab" href="#nav-saved" role="tab" aria-controls="nav-saved" aria-selected="false">Saved</a>
+            <a class="nav-item nav-link" id="nav-suggestion-tab" data-toggle="tab" href="#nav-suggestion" role="tab" aria-controls="nav-suggestion" aria-selected="false">Suggestion</a>
           </div>
         </nav>
+
+        <!-- content inside tabs -->
         <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">...</div>
-            <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">...</div>
-            <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
+            <div class="tab-pane fade show active" id="nav-search" role="tabpanel" aria-labelledby="nav-search-tab">
+                search bar
+                <br>
+                display search stuff
+            </div>
+            <div class="tab-pane fade" id="nav-saved" role="tabpanel" aria-labelledby="nav-saved-tab">
+                saved stuff from search
+            </div>
+            <div class="tab-pane fade" id="nav-suggestion" role="tabpanel" aria-labelledby="nav-suggestion-tab">
+                recommended puzzles to play
+            </div>
         </div>
     </div>
 
     <!-- game area centered to the rest of the page -->
     <div class="game text-center m-auto">
-        <form id='btns'>
-            <button class="btn btn-primary" data-tileCount="3">Easy</button>
-            <button class="btn btn-primary" data-tileCount="4">Medium</button>
-            <button class="btn btn-primary" data-tileCount="5">Difficult</button>
-            <button class="btn-primary" id="start">Start</button>
-        </form>
-        <p class='msg'>Steps: <span id='steps'></span></p>
-        <p class='msg'>Time: <span id='time'></span></p>
-        <img src="../Picture_Puzzle/assets/images/img_1000x600.jpg" alt="hidden" id="hiddenImg">
-        <div id="target"></div>
+        <!-- navigation for tabs -->
+        <nav class="my-2">
+          <div class="nav justify-content-center nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link active" id="nav-game-tab" data-toggle="tab" href="#nav-game" role="tab" aria-controls="nav-game" aria-selected="true">Puzzle</a>
+            <a class="nav-item nav-link" id="nav-completed-tab" data-toggle="tab" href="#nav-completed" role="tab" aria-controls="nav-completed" aria-selected="false">Completed</a>
+            <a class="nav-item nav-link" id="nav-ranking-tab" data-toggle="tab" href="#nav-ranking" role="tab" aria-controls="nav-ranking" aria-selected="false">Ranking</a>
+          </div>
+        </nav>
+
+        <!-- content inside tabs -->
+        <div class="tab-content" id="nav-tabContent">
+            <!-- Game Content -->
+            <div class="tab-pane fade show active" id="nav-game" role="tabpanel" aria-labelledby="nav-game-tab">
+                <form id='btns'>
+                    <button class="difficulty btn btn-primary" data-tileCount="3">Easy</button>
+                    <button class="difficulty btn btn-primary" data-tileCount="4">Medium</button>
+                    <button class="difficulty btn btn-primary" data-tileCount="5">Difficult</button>
+                    <button class="btn btn-primary" id="start">Start</button>
+                </form>
+                <div id='msgBoard'>
+                    <p class='msg'><span id='numPlayers'></span> people currently playing</p>
+                    <p class='msg'>Steps: <span id='steps'></span></p>
+                    <p class='msg'>Time: <span id="minute"></span> : <span id="second"></span></p>
+                    <img src="../Picture_Puzzle/assets/images/img_1000x600.jpg" alt="hidden" id="hiddenImg">
+                </div>
+                <div id="target"></div>
+            </div>
+
+            <div class="tab-pane fade" id="nav-completed" role="tabpanel" aria-labelledby="nav-completed-tab">
+                You haven't completed any games yet
+            </div>
+            <div class="tab-pane fade" id="nav-ranking" role="tabpanel" aria-labelledby="nav-ranking-tab">
+                Ranking display
+            </div>
+        </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
