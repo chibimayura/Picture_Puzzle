@@ -30,6 +30,7 @@ var gameStarted = false;
 var numHint = 5;
 var initialStep = 0;
 var stepCount = initialStep;
+var correctTileCount = 0;
 
 $("#second").text("0" + second);
 $("#minute").text("0" + minute);
@@ -137,10 +138,13 @@ function Move(clicked_square, tileWidth, tileHeight){
 // $('#board').children()["0"].style.top;
 
 function completionChecker () {
-    for (var i = 0; i < $('#board' ).children().length; i++) {
-
-        if ($('#board').children()[i].attributes[2].value == $('#board').children()[i].style.left && $('#board').children()[i].attributes[3].value == $('#board').children()[i].style.top) {
-            // alert('yay!');
+    correctTileCount = 0;
+    for (var i = 0; i < $('#board').children().length; i++) {
+        if ($('#board').children()[i].attributes[2].value === $('#board').children()[i].style.left && $('#board').children()[i].attributes[3].value === $('#board').children()[i].style.top) {
+            correctTileCount ++;
+        }
+        if (correctTileCount == totalTiles){
+            alert("yay!");
         }
     }
 } 
