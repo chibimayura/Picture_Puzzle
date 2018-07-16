@@ -1,3 +1,4 @@
+// firebase APIkey config
 var config = {
     apiKey: "AIzaSyButUq1u4dRUQGPjDtBJt0j2yQMVmWna7I",
     authDomain: "picture-puzzle-31b40.firebaseapp.com",
@@ -7,33 +8,64 @@ var config = {
     messagingSenderId: "480871351650"
 };
 firebase.initializeApp(config);
+
+// reference to firebase database
 var database = firebase.database();
 var connectionsRef = database.ref("/connections");
 var connectedRef = database.ref(".info/connected");
 var playerDataRef = database.ref("/playerData");
+
+// html selectors
+var puzzleBoard = $("#board");
+var target = $("#target");
+var minuteText = $("#minute");
+var secondText = $("#second");
+var stepsText = $("#steps");
+var hiddenImage = $("#hiddenImg");
+
+// stores width and height of tiles
+var tileWidth, tileHeight;
+// stores tileCount per row and column
+var tileCount;
+// stores total number to tiles in the puzzle
+var totalTiles;
+//randomizes which tile will be empty
+var randomEmptyTile;
+
+// stores the num of tiles in correct place
+var correctTileCount = 0;
+
+// Tile position
 var tileZindex = 1; 
 var imgZindex = tileZindex + 1;
-var tileWidth;
-var tileHeight;
-var tileCount;
-var totalTiles;
-var randomEmptyTile;
 var tileSequence = [];
-var imgWidth = parseInt($("#hiddenImg").css("width"));
-var imgHeight = parseInt($("#hiddenImg").css("height"));
+var imgWidth = parseInt(hiddenImage.css("width"));
+var imgHeight = parseInt(hiddenImage.css("height"));
+
+// stores reference to time
+var minuteRecord, secondRecord;
 var minute = 0;
 var second = 0;
-var minuteRecord;
-var secondRecord;
-var secondInterval;            
+var secondInterval;
+
+// boolean that checks whether game start or not           
 var gameStarted = false;
+
+// stores hints and steps used during game
 var numHint = 5;
 var initialStep = 0;
 var stepCount = initialStep;
+var correctTileCount = 0;
 
-$("#second").text("0" + second);
-$("#minute").text("0" + minute);
-$("#steps").text(stepCount);        
+// stores puzzle image src
+// var puzzleImage = "../images/img_1000x600.jpg";
+// var defaultPuzzle = $("<img id='hiddenImg' alt='hidden'>").attr("src", puzzleImage);
+// $("#msgBoard").append(defaultPuzzle);
+
+// text Selector for time and steps
+secondText.text("0" + second);
+minuteText.text("0" + minute);
+stepsText.text(stepCount);
 
 connectedRef.on("value", function(snap) {
     if (snap.val()) {
@@ -47,7 +79,7 @@ connectionsRef.on("value", function(snap) {
 });
 
 $.fn.extend({ sortedTiles:function(pieces){
-    $("#target").empty();
+    target.empty();
     var targetElement = "#" + $(this).attr("id");
     tileWidth = Math.floor(imgWidth / pieces);
     tileHeight = Math.floor(imgHeight / pieces);
@@ -66,7 +98,15 @@ $.fn.extend({ sortedTiles:function(pieces){
 });
 
 $.fn.extend({ createGame:function(pieces){
-    $("#target").empty();
+    target.empty();
+    stepCount = initialStep;
+    secondInterval = setInterval(timerSecond, 1000);
+    gameStarted = true;
+    $(".btn-primary").hide();
+    var giveupBTN = $("<button class='newButtonSpacing btn btn-primary' id='giveUp'>I GIVE UP!</button>");
+    var hintBTN = $("<button class='newButtonSpacing btn btn-primary' id='hint'>" + numHint + " hints</button>");
+    var restartBTN = $("<button class='btn-primary' id='restart'>Restart</button>")
+    $("#btns").append(restartBTN, hintBTN, giveupBTN);
     var targetElement = "#" + $(this).attr("id");
     tileWidth = Math.floor(imgWidth / pieces);
     tileHeight = Math.floor(imgHeight / pieces);
@@ -81,7 +121,7 @@ $.fn.extend({ createGame:function(pieces){
     $("#board").css({ position:'absolute', width: imgWidth, height: imgHeight});
         // tileSequence.sort(function(a, b){return 0.5 - Math.random()});
         for (var i = 0; i < totalTiles; i++){
-            $("#board").append("<div class='tiles' data-sequence = " + tileSequence[i].tileNumber + " positionleft = " + tileSequence[i].left + " positiontop = " + tileSequence[i].top  + "  style = 'position: absolute; left: " + ((i % tileCount) * tileWidth) + "px; top: " + Math.floor(i / tileCount) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; -moz-box-shadow: inset 0 0 20px #555555; -webkit-box-shadow: inset 0 0 20px #555555; box-shadow: inset 0 0 20px #555555; background: #ffffff url(../Picture_Puzzle/assets/images/img_1000x600.jpg) " + (-(tileSequence[i].tileNumber % tileCount) * tileWidth) + "px " + -Math.floor(tileSequence[i].tileNumber / tileCount) * tileHeight + "px no-repeat !important'></div>");
+            $("#board").append("<div class='tiles' data-sequence = " + tileSequence[i].tileNumber + " positionleft = " + tileSequence[i].left + " positiontop = " + tileSequence[i].top  + "  style = 'position: absolute; left: " + ((i % tileCount) * tileWidth) + "px; top: " + Math.floor(i / tileCount) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; background: #ffffff url(../Picture_Puzzle/assets/images/img_1000x600.jpg) " + (-(tileSequence[i].tileNumber % tileCount) * tileWidth) + "px " + -Math.floor(tileSequence[i].tileNumber / tileCount) * tileHeight + "px no-repeat !important'></div>");
         }
     $("#board").children("div:nth-child(" + randomEmptyTile + ")").css({backgroundImage: " ", background: "#ffffff"});
     $("#board").children("div").click(function(){
@@ -118,20 +158,31 @@ function Move(clicked_square, tileWidth, tileHeight){
         $(clicked_square).animate({ left: oldx, top: oldy }, 200, function(){
             $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("left", newx);
             $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("top", newy);
+            setTimeout(completionChecker, 100);
         });
         stepCount ++;
         $("#steps").text(stepCount);
-
-        completionChecker();
     };
 };
 
-function completionChecker() {
-    var check = totalTiles;
-    for (var i = 0; i < totalTiles; i++) {
-        if ($('#board').children()[i].attributes[2].value == $('#board').children()[i].style.left && $('#board').children()[i].attributes[3].value == $('#board').children()[i].style.top) {
-            check--;
-            console.log(check);
+function completionChecker () {
+    correctTileCount = 0;
+    for (var i = 0; i < $('#board').children().length; i++) {
+        if ($('#board').children()[i].attributes[2].value === $('#board').children()[i].style.left && $('#board').children()[i].attributes[3].value === $('#board').children()[i].style.top) {
+            correctTileCount ++;
+        }
+        if (correctTileCount == totalTiles){
+            alert("yay!");
+            clearInterval(secondInterval);
+            currentMin = minuteText.text();
+            currentSec = secondText.text();
+            database.ref("/timeRecords").set({
+                lastCompletedTime : currentMin + " : " + currentSec
+            });
+            database.ref("/stepRecords").set({
+                lastCompletedStep : stepCount
+            });
+            gameStarted = false;
         }
     }
     if (check == 2 && $('#board').children()[totalTiles-1].attributes[1].value == (totalTiles-1)) {
@@ -168,18 +219,18 @@ $(document).on("click", ".difficulty", function(){
 $(document).on("click", "#start", function(){
     event.preventDefault();
     if(tileCount != undefined && gameStarted === false){
-        $("#target").createGame(tileCount);
-        $(".btn").hide();
-        var newBTN = $("<button class='btn-primary' id='giveUp'>I GIVE UP!</button>");
-        var hintBTN = $("<button class='btn-primary' id='hint'>" + numHint + " hints</button>");
-        $("#btns").append(hintBTN, newBTN);
-        stepCount = initialStep;
-        secondInterval = setInterval(timerSecond, 1000);
-        gameStarted = true;
+        target.createGame(tileCount);
     }else if(tileCount == undefined){
         alert("Select a difficulty!!!");
     }
 });
+
+$(document).on("click", "#restart", function(){
+    event.preventDefault();
+    if(confirm("Are you sure?")){
+        target.createGame(tileCount);
+    }
+})
 
 $(document).on("click", "#giveUp", function(){
     event.preventDefault();
@@ -198,17 +249,19 @@ $(document).on("click", "#giveUp", function(){
 
 $(document).on("click", "#hint", function (){
     event.preventDefault();
-    if(numHint > 1){
-        $("#hiddenImg").fadeIn(1000);
-        $("#hiddenImg").delay(2000).fadeOut(1000);
-        numHint--;
-        $("#hint").text(numHint + " hints");
-    }else if (numHint > 0){
-        $("#hiddenImg").fadeIn(1000);
-        $("#hiddenImg").delay(2000).fadeOut(1000);
-        numHint--;
-        $("#hint").text(numHint + " hint");
-    }else{
-        alert("Show me your money");
+    if (gameStarted == true){
+        if(numHint > 1){
+            $("#hiddenImg").fadeIn(1000);
+            $("#hiddenImg").delay(2000).fadeOut(1000);
+            numHint--;
+            $("#hint").text(numHint + " hints");
+        }else if (numHint > 0){
+            $("#hiddenImg").fadeIn(1000);
+            $("#hiddenImg").delay(2000).fadeOut(1000);
+            numHint--;
+            $("#hint").text(numHint + " hint");
+        }else{
+            alert("Show me your money");
+        }
     }
 });
