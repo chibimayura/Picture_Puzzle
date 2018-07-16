@@ -155,13 +155,15 @@ function completionChecker () {
             clearInterval(secondInterval);
             currentMin = $("#minute").text();
             currentSec = $("#second").text();
-            database.ref("/timeRecords").set({
+            database.ref("/timeRecords").push({
                 lastCompletedTime : currentMin + " : " + currentSec
             });
-            database.ref("/stepRecords").set({
+            database.ref("/stepRecords").push({
                 lastCompletedStep : stepCount
             });
             gameStarted = false;
+            setTimeout($("#target").sortedTiles(tileCount),1000);
+            // $("#target").sortedTiles(tileCount);
         }
     }
 } 
@@ -203,6 +205,11 @@ $(document).on("click", "#start", function(){
 $(document).on("click", "#restart", function(){
     event.preventDefault();
     if(confirm("Are you sure?")){
+        clearInterval(secondInterval);
+        second = 0;
+        minute = 0;
+        $("#second").text("0" + second);
+        $("#minute").text("0" + minute);
         $("#target").createGame(tileCount);
     }
 })
@@ -212,10 +219,10 @@ $(document).on("click", "#giveUp", function(){
     clearInterval(secondInterval);
     currentMin = $("#minute").text();
     currentSec = $("#second").text();
-    database.ref("/timeRecords").set({
+    database.ref("/lastRecordedTime").push({
         lastRecordedTime : currentMin + " : " + currentSec
     });
-    database.ref("/stepRecords").set({
+    database.ref("/lastRecordedStep").push({
         lastRecordedStep : stepCount
     });
     gameStarted = false;
