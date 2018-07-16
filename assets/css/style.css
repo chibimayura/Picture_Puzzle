@@ -1,0 +1,66 @@
+body {
+	background: url("../images/geometric-bg.png");
+}
+
+.sidebar {
+	background-color: #ffe6e6;
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 300px;
+	z-index: 1;
+	overflow-x: hidden;
+	border-right: 5px ridge #e3b5b5;
+}
+
+.sidebar a, .game a{
+	background-color: #c76b6b;
+	color: #fff;
+}
+
+.game a {
+	width: 20%;
+	text-align: center;
+}
+
+
+.game {
+	margin-left: 300px;
+	margin: auto;
+}
+
+/*game related style*/
+#hiddenImg {
+    display: none;
+    position: absolute;
+    z-index: 2;
+}
+
+.btn-primary {
+    padding: 10px 18px;
+    font-size: 15px;
+    font-weight: bolder;
+    border-radius: 5px;
+    background-color: #00747d;
+    color: #fff;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+	background-color: #00a7b3 !important;
+}
+
+.tiles {
+    cursor: pointer;
+}
+
+#board div{
+	-moz-box-shadow: inset 0 0 20px #555555;
+	-webkit-box-shadow: inset 0 0 20px #555555;
+	box-shadow: inset 0 0 20px #555555;
+}
+
+#board {
+	left: 25%;
+}
