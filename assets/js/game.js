@@ -118,11 +118,10 @@ function Move(clicked_square, tileWidth, tileHeight){
         $(clicked_square).animate({ left: oldx, top: oldy }, 200, function(){
             $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("left", newx);
             $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("top", newy);
+            setTimeout(completionChecker, 100);
         });
         stepCount ++;
         $("#steps").text(stepCount);
-
-        completionChecker();
     };
 };
 
