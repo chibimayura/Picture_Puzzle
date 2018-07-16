@@ -75,10 +75,11 @@ $.fn.extend({ createGame:function(pieces){
     for (var i=0; i<totalTiles; i++){
         tileSequence.push({"tileNumber" : i, "left" : ((i % tileCount) * tileWidth) + "px", "top" : Math.floor(i / tileCount) * tileHeight + "px"});
     }
-    randomEmptyTile = Math.ceil(Math.random() * totalTiles);
+    // randomEmptyTile = Math.ceil(Math.random() * totalTiles);
+    randomEmptyTile = totalTiles;
     $(targetElement).html("<div id = 'board'></div>");
     $("#board").css({ position:'absolute', width: imgWidth, height: imgHeight});
-        tileSequence.sort(function(a, b){return 0.5 - Math.random()});
+        // tileSequence.sort(function(a, b){return 0.5 - Math.random()});
         for (var i = 0; i < totalTiles; i++){
             $("#board").append("<div class='tiles' data-sequence = " + tileSequence[i].tileNumber + " positionleft = " + tileSequence[i].left + " positiontop = " + tileSequence[i].top  + "  style = 'position: absolute; left: " + ((i % tileCount) * tileWidth) + "px; top: " + Math.floor(i / tileCount) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; -moz-box-shadow: inset 0 0 20px #555555; -webkit-box-shadow: inset 0 0 20px #555555; box-shadow: inset 0 0 20px #555555; background: #ffffff url(../Picture_Puzzle/assets/images/img_1000x600.jpg) " + (-(tileSequence[i].tileNumber % tileCount) * tileWidth) + "px " + -Math.floor(tileSequence[i].tileNumber / tileCount) * tileHeight + "px no-repeat !important'></div>");
         }
@@ -125,23 +126,17 @@ function Move(clicked_square, tileWidth, tileHeight){
     };
 };
 
-// ref on the info:
-// positionleft:                     
-// $('#board').children()["0"].attributes[2].value;
-// positiontop:
-// $('#board' ).children()["0"].attributes[3].value;
-
-// style left:
-// $('#board').children()["0"].style.left;
-// style top:
-// $('#board').children()["0"].style.top;
-
-function completionChecker () {
-    for (var i = 0; i < $('#board' ).children().length; i++) {
-
+function completionChecker() {
+    var check = totalTiles;
+    for (var i = 0; i < totalTiles; i++) {
         if ($('#board').children()[i].attributes[2].value == $('#board').children()[i].style.left && $('#board').children()[i].attributes[3].value == $('#board').children()[i].style.top) {
-            // alert('yay!');
+            check--;
+            console.log(check);
         }
+    }
+    if (check == 2 && $('#board').children()[totalTiles-1].attributes[1].value == (totalTiles-1)) {
+        alert('you won!');
+        // $("#hiddenImg").fadeIn(3000);
     }
 } 
 
