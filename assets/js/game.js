@@ -55,6 +55,7 @@ var gameStarted = false;
 var numHint = 5;
 var initialStep = 0;
 var stepCount = initialStep;
+var correctTileCount = 0;
 
 // stores puzzle image src
 var puzzleImage = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Hamster_057eue.jpg/1200px-Hamster_057eue.jpg";
@@ -97,7 +98,15 @@ $.fn.extend({ sortedTiles:function(pieces){
 });
 
 $.fn.extend({ createGame:function(pieces){
-    target.empty();
+    $("#target").empty();
+    stepCount = initialStep;
+    secondInterval = setInterval(timerSecond, 1000);
+    gameStarted = true;
+    $(".btn-primary").hide();
+    var giveupBTN = $("<button class='newButtonSpacing btn btn-primary' id='giveUp'>I GIVE UP!</button>");
+    var hintBTN = $("<button class='newButtonSpacing btn btn-primary' id='hint'>" + numHint + " hints</button>");
+    var restartBTN = $("<button class='btn-primary' id='restart'>Restart</button>")
+    $("#btns").append(restartBTN, hintBTN, giveupBTN);
     var targetElement = "#" + $(this).attr("id");
     tileWidth = Math.floor(imgWidth / pieces);
     tileHeight = Math.floor(imgHeight / pieces);
@@ -125,46 +134,56 @@ $.fn.extend({ createGame:function(pieces){
 });
 
 function Move(clicked_square, tileWidth, tileHeight){
-   var movable = false;
-   var oldx = puzzleBoard.children("div:nth-child(" + randomEmptyTile + ")").css("left");
-   var oldy = puzzleBoard.children("div:nth-child(" + randomEmptyTile + ")").css("top");
-   var newx = $(clicked_square).css("left");
-   var newy = $(clicked_square).css("top");
-   if (oldx == newx && newy == (parseInt(oldy) - tileHeight) + 'px'){
-       movable = true;
-   };
-   if (oldx == newx && newy == (parseInt(oldy) + tileHeight) + 'px'){
-       movable = true;
-   };
-   if ((parseInt(oldx) - tileWidth) + 'px' == newx && newy == oldy){
-       movable = true;
-   };
-   if ((parseInt(oldx) + tileWidth) + 'px' == newx && newy == oldy){
-       movable = true;
-   };
-   if (movable){
-       hiddenImage.css("z-index", imgZindex++);
-       $(clicked_square).css("z-index", tileZindex++);
-       $(clicked_square).animate({ left: oldx, top: oldy }, 200, function(){
-           puzzleBoard.children("div:nth-child(" + randomEmptyTile + ")").css("left", newx);
-           puzzleBoard.children("div:nth-child(" + randomEmptyTile + ")").css("top", newy);
-           setTimeout(completionChecker, 100);
-       });
-       stepCount ++;
-       stepsText.text(stepCount);
-   };
+    var movable = false;
+    var oldx = puzzleBoard.children("div:nth-child(" + randomEmptyTile + ")").css("left");
+    var oldy = puzzleBoard.children("div:nth-child(" + randomEmptyTile + ")").css("top");
+    var newx = $(clicked_square).css("left");
+    var newy = $(clicked_square).css("top");
+    if (oldx == newx && newy == (parseInt(oldy) - tileHeight) + 'px'){
+        movable = true;
+    };
+    if (oldx == newx && newy == (parseInt(oldy) + tileHeight) + 'px'){
+        movable = true;
+    };
+    if ((parseInt(oldx) - tileWidth) + 'px' == newx && newy == oldy){
+        movable = true;
+    };
+    if ((parseInt(oldx) + tileWidth) + 'px' == newx && newy == oldy){
+        movable = true;
+    };
+    if (movable){
+        hiddenImage.css("z-index", imgZindex++);
+        $(clicked_square).css("z-index", tileZindex++);
+        $(clicked_square).animate({ left: oldx, top: oldy }, 200, function(){
+            puzzleBoard.children("div:nth-child(" + randomEmptyTile + ")").css("left", newx);
+            puzzleBoard.children("div:nth-child(" + randomEmptyTile + ")").css("top", newy);
+            setTimeout(completionChecker, 100);
+        });
+        stepCount ++;
+        stepsText.text(stepCount);
+    };
 };
 
 function completionChecker () {
-   correctTileCount = 0;
-   for (var i = 0; i < puzzleBoard.children().length; i++) {
-       if (puzzleBoard.children()[i].attributes[2].value === puzzleBoard.children()[i].style.left && puzzleBoard.children()[i].attributes[3].value === puzzleBoard.children()[i].style.top) {
-           correctTileCount ++;
-       }
-       if (correctTileCount == totalTiles){
-           alert("yay!");
-       }
-   }
+    correctTileCount = 0;
+    for (var i = 0; i < puzzleBoard.children().length; i++) {
+        if (puzzleBoard.children()[i].attributes[2].value === puzzleBoard.children()[i].style.left && puzzleBoard.children()[i].attributes[3].value === puzzleBoard.children()[i].style.top) {
+            correctTileCount ++;
+        }
+        if (correctTileCount == totalTiles){
+            alert("yay!");
+            clearInterval(secondInterval);
+            currentMin = minuteText.text();
+            currentSec = secondText.text();
+            database.ref("/timeRecords").set({
+                lastCompletedTime : currentMin + " : " + currentSec
+            });
+            database.ref("/stepRecords").set({
+                lastCompletedStep : stepCount
+            });
+            gameStarted = false;
+        }
+    }
 } 
 
 function timerSecond(){
@@ -196,17 +215,17 @@ $(document).on("click", "#start", function(){
     event.preventDefault();
     if(tileCount != undefined && gameStarted === false){
         target.createGame(tileCount);
-        $(".btn").hide();
-        var newBTN = $("<button class='newButtonSpacing btn btn-primary' id='giveUp'>I GIVE UP!</button>");
-        var hintBTN = $("<button class='newButtonSpacing btn btn-primary' id='hint'>" + numHint + " hints</button>");
-        $("#btns").append(hintBTN, newBTN);
-        stepCount = initialStep;
-        secondInterval = setInterval(timerSecond, 1000);
-        gameStarted = true;
     }else if(tileCount == undefined){
         alert("Select a difficulty!!!");
     }
 });
+
+$(document).on("click", "#restart", function(){
+    event.preventDefault();
+    if(confirm("Are you sure?")){
+        target.createGame(tileCount);
+    }
+})
 
 $(document).on("click", "#giveUp", function(){
     event.preventDefault();
