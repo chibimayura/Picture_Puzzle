@@ -7,6 +7,7 @@ Break up into 9 tiles
 Step 2:
 Moving tiles on click
 Introduce difficulty level
+Check game completion
 
 Step 3:
 Allow search and save

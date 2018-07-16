@@ -30,6 +30,7 @@ var gameStarted = false;
 var numHint = 5;
 var initialStep = 0;
 var stepCount = initialStep;
+var correctTileCount = 0;
 
 $("#second").text("0" + second);
 $("#minute").text("0" + minute);
@@ -67,6 +68,14 @@ $.fn.extend({ sortedTiles:function(pieces){
 
 $.fn.extend({ createGame:function(pieces){
     $("#target").empty();
+    stepCount = initialStep;
+    secondInterval = setInterval(timerSecond, 1000);
+    gameStarted = true;
+    $(".btn-primary").hide();
+    var giveupBTN = $("<button class='btn-primary' id='giveUp'>I GIVE UP!</button>");
+    var hintBTN = $("<button class='btn-primary' id='hint'>" + numHint + " hints</button>");
+    var restartBTN = $("<button class='btn-primary' id='restart'>Restart</button>")
+    $("#btns").append(restartBTN, hintBTN, giveupBTN);
     var targetElement = "#" + $(this).attr("id");
     tileWidth = Math.floor(imgWidth / pieces);
     tileHeight = Math.floor(imgHeight / pieces);
@@ -117,11 +126,10 @@ function Move(clicked_square, tileWidth, tileHeight){
         $(clicked_square).animate({ left: oldx, top: oldy }, 200, function(){
             $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("left", newx);
             $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("top", newy);
+            setTimeout(completionChecker, 100);
         });
         stepCount ++;
         $("#steps").text(stepCount);
-
-        completionChecker();
     };
 };
 
@@ -137,10 +145,23 @@ function Move(clicked_square, tileWidth, tileHeight){
 // $('#board').children()["0"].style.top;
 
 function completionChecker () {
-    for (var i = 0; i < $('#board' ).children().length; i++) {
-
-        if ($('#board').children()[i].attributes[2].value == $('#board').children()[i].style.left && $('#board').children()[i].attributes[3].value == $('#board').children()[i].style.top) {
-            // alert('yay!');
+    correctTileCount = 0;
+    for (var i = 0; i < $('#board').children().length; i++) {
+        if ($('#board').children()[i].attributes[2].value === $('#board').children()[i].style.left && $('#board').children()[i].attributes[3].value === $('#board').children()[i].style.top) {
+            correctTileCount ++;
+        }
+        if (correctTileCount == totalTiles){
+            alert("yay!");
+            clearInterval(secondInterval);
+            currentMin = $("#minute").text();
+            currentSec = $("#second").text();
+            database.ref("/timeRecords").set({
+                lastCompletedTime : currentMin + " : " + currentSec
+            });
+            database.ref("/stepRecords").set({
+                lastCompletedStep : stepCount
+            });
+            gameStarted = false;
         }
     }
 } 
@@ -174,17 +195,17 @@ $(document).on("click", "#start", function(){
     event.preventDefault();
     if(tileCount != undefined && gameStarted === false){
         $("#target").createGame(tileCount);
-        $(".btn").hide();
-        var newBTN = $("<button class='btn-primary' id='giveUp'>I GIVE UP!</button>");
-        var hintBTN = $("<button class='btn-primary' id='hint'>" + numHint + " hints</button>");
-        $("#btns").append(hintBTN, newBTN);
-        stepCount = initialStep;
-        secondInterval = setInterval(timerSecond, 1000);
-        gameStarted = true;
     }else if(tileCount == undefined){
         alert("Select a difficulty!!!");
     }
 });
+
+$(document).on("click", "#restart", function(){
+    event.preventDefault();
+    if(confirm("Are you sure?")){
+        $("#target").createGame(tileCount);
+    }
+})
 
 $(document).on("click", "#giveUp", function(){
     event.preventDefault();
@@ -203,17 +224,19 @@ $(document).on("click", "#giveUp", function(){
 
 $(document).on("click", "#hint", function (){
     event.preventDefault();
-    if(numHint > 1){
-        $("#hiddenImg").fadeIn(1000);
-        $("#hiddenImg").delay(2000).fadeOut(1000);
-        numHint--;
-        $("#hint").text(numHint + " hints");
-    }else if (numHint > 0){
-        $("#hiddenImg").fadeIn(1000);
-        $("#hiddenImg").delay(2000).fadeOut(1000);
-        numHint--;
-        $("#hint").text(numHint + " hint");
-    }else{
-        alert("Show me your money");
+    if (gameStarted == true){
+        if(numHint > 1){
+            $("#hiddenImg").fadeIn(1000);
+            $("#hiddenImg").delay(2000).fadeOut(1000);
+            numHint--;
+            $("#hint").text(numHint + " hints");
+        }else if (numHint > 0){
+            $("#hiddenImg").fadeIn(1000);
+            $("#hiddenImg").delay(2000).fadeOut(1000);
+            numHint--;
+            $("#hint").text(numHint + " hint");
+        }else{
+            alert("Show me your money");
+        }
     }
 });
