@@ -144,6 +144,16 @@ function completionChecker () {
         }
         if (correctTileCount == totalTiles){
             alert("yay!");
+            clearInterval(secondInterval);
+            currentMin = $("#minute").text();
+            currentSec = $("#second").text();
+            database.ref("/timeRecords").set({
+                lastCompletedTime : currentMin + " : " + currentSec
+            });
+            database.ref("/stepRecords").set({
+                lastCompletedStep : stepCount
+            });
+            gameStarted = false;
         }
     }
 } 
