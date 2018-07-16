@@ -24,6 +24,9 @@ var totalTiles;
 //randomizes which tile will be empty
 var randomEmptyTile;
 
+// stores the num of tiles in correct place
+var correctTileCount = 0;
+
 // Tile position
 var tileZindex = 1; 
 var imgZindex = tileZindex + 1;
@@ -47,7 +50,10 @@ var stepCount = initialStep;
 
 // stores puzzle image src
 var puzzleImage = "assets/images/img_1000x600.jpg";
+var defaultPuzzle = $("<img id='hiddenImg' alt='hidden'>").attr("src", puzzleImage);
+// $("#msgBoard").append(defaultPuzzle);
 
+// text Selector for time and steps
 $("#second").text("0" + second);
 $("#minute").text("0" + minute);
 $("#steps").text(stepCount);        
@@ -77,7 +83,7 @@ $.fn.extend({ sortedTiles:function(pieces){
     $(targetElement).html("<div id = 'board'></div>");
     $("#board").css({ position:'absolute', width: imgWidth, height: imgHeight});
         for (var i = 0; i < totalTiles; i++){
-            $("#board").append("<div data-sequence = " + tileSequence[i] + " style = 'position: absolute; left: " + ((i % tileCount) * tileWidth) + "px; top: " + Math.floor(i / tileCount) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; background: #ffffff url(../Picture_Puzzle/assets/images/img_1000x600.jpg) " + (-(tileSequence[i] % tileCount) * tileWidth) + "px " + -Math.floor(tileSequence[i] / tileCount) * tileHeight + "px no-repeat !important'></div>");
+            $("#board").append("<div data-sequence = " + tileSequence[i] + " style = 'position: absolute; left: " + ((i % tileCount) * tileWidth) + "px; top: " + Math.floor(i / tileCount) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; background: #ffffff url("+ puzzleImage +") " + (-(tileSequence[i] % tileCount) * tileWidth) + "px " + -Math.floor(tileSequence[i] / tileCount) * tileHeight + "px no-repeat !important'></div>");
         }
     }
 });
@@ -97,7 +103,7 @@ $.fn.extend({ createGame:function(pieces){
     $("#board").css({ position:'absolute', width: imgWidth, height: imgHeight});
         tileSequence.sort(function(a, b){return 0.5 - Math.random()});
         for (var i = 0; i < totalTiles; i++){
-            $("#board").append("<div class='tiles' data-sequence = " + tileSequence[i].tileNumber + " positionleft = " + tileSequence[i].left + " positiontop = " + tileSequence[i].top  + "  style = 'position: absolute; left: " + ((i % tileCount) * tileWidth) + "px; top: " + Math.floor(i / tileCount) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; background: #ffffff url(../Picture_Puzzle/assets/images/img_1000x600.jpg) " + (-(tileSequence[i].tileNumber % tileCount) * tileWidth) + "px " + -Math.floor(tileSequence[i].tileNumber / tileCount) * tileHeight + "px no-repeat !important'></div>");
+            $("#board").append("<div class='tiles' data-sequence = " + tileSequence[i].tileNumber + " positionleft = " + tileSequence[i].left + " positiontop = " + tileSequence[i].top  + "  style = 'position: absolute; left: " + ((i % tileCount) * tileWidth) + "px; top: " + Math.floor(i / tileCount) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; background: #ffffff url(" + puzzleImage + ") " + (-(tileSequence[i].tileNumber % tileCount) * tileWidth) + "px " + -Math.floor(tileSequence[i].tileNumber / tileCount) * tileHeight + "px no-repeat !important'></div>");
         }
     $("#board").children("div:nth-child(" + randomEmptyTile + ")").css({backgroundImage: " ", background: "#ffffff"});
     $("#board").children("div").click(function(){
@@ -111,44 +117,46 @@ $.fn.extend({ createGame:function(pieces){
 });
 
 function Move(clicked_square, tileWidth, tileHeight){
-    var movable = false;
-    var oldx = $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("left");
-    var oldy = $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("top");
-    var newx = $(clicked_square).css("left");
-    var newy = $(clicked_square).css("top");
-    if (oldx == newx && newy == (parseInt(oldy) - tileHeight) + 'px'){
-        movable = true;
-    };
-    if (oldx == newx && newy == (parseInt(oldy) + tileHeight) + 'px'){
-        movable = true;
-    };
-    if ((parseInt(oldx) - tileWidth) + 'px' == newx && newy == oldy){
-        movable = true;
-    };
-    if ((parseInt(oldx) + tileWidth) + 'px' == newx && newy == oldy){
-        movable = true;
-    };
-    if (movable){
-        $("#hiddenImg").css("z-index", imgZindex++);
-        $(clicked_square).css("z-index", tileZindex++);
-        $(clicked_square).animate({ left: oldx, top: oldy }, 200, function(){
-            $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("left", newx);
-            $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("top", newy);
-        });
-        stepCount ++;
-        $("#steps").text(stepCount);
-
-        completionChecker();
-    };
+   var movable = false;
+   var oldx = $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("left");
+   var oldy = $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("top");
+   var newx = $(clicked_square).css("left");
+   var newy = $(clicked_square).css("top");
+   if (oldx == newx && newy == (parseInt(oldy) - tileHeight) + 'px'){
+       movable = true;
+   };
+   if (oldx == newx && newy == (parseInt(oldy) + tileHeight) + 'px'){
+       movable = true;
+   };
+   if ((parseInt(oldx) - tileWidth) + 'px' == newx && newy == oldy){
+       movable = true;
+   };
+   if ((parseInt(oldx) + tileWidth) + 'px' == newx && newy == oldy){
+       movable = true;
+   };
+   if (movable){
+       $("#hiddenImg").css("z-index", imgZindex++);
+       $(clicked_square).css("z-index", tileZindex++);
+       $(clicked_square).animate({ left: oldx, top: oldy }, 200, function(){
+           $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("left", newx);
+           $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("top", newy);
+           setTimeout(completionChecker, 100);
+       });
+       stepCount ++;
+       $("#steps").text(stepCount);
+   };
 };
 
 function completionChecker () {
-    for (var i = 0; i < $('#board' ).children().length; i++) {
-
-        if ($('#board').children()[i].attributes[2].value == $('#board').children()[i].style.left && $('#board').children()[i].attributes[3].value == $('#board').children()[i].style.top) {
-            // alert('yay!');
-        }
-    }
+   correctTileCount = 0;
+   for (var i = 0; i < $("#board").children().length; i++) {
+       if ($("#board").children()[i].attributes[2].value === $("#board").children()[i].style.left && $("#board").children()[i].attributes[3].value === $("#board").children()[i].style.top) {
+           correctTileCount ++;
+       }
+       if (correctTileCount == totalTiles){
+           alert("yay!");
+       }
+   }
 } 
 
 function timerSecond(){
@@ -208,18 +216,20 @@ $(document).on("click", "#giveUp", function(){
 });
 
 $(document).on("click", "#hint", function (){
-    event.preventDefault();
-    if(numHint > 1){
-        $("#hiddenImg").fadeIn(1000);
-        $("#hiddenImg").delay(2000).fadeOut(1000);
-        numHint--;
-        $("#hint").text(numHint + " hints");
-    }else if (numHint > 0){
-        $("#hiddenImg").fadeIn(1000);
-        $("#hiddenImg").delay(2000).fadeOut(1000);
-        numHint--;
-        $("#hint").text(numHint + " hint");
-    }else{
-        alert("Show me your money");
-    }
+   event.preventDefault();
+   if (gameStarted == true){
+       if(numHint > 1){
+           $("#hiddenImg").fadeIn(1000);
+           $("#hiddenImg").delay(2000).fadeOut(1000);
+           numHint--;
+           $("#hint").text(numHint + " hints");
+       }else if (numHint > 0){
+           $("#hiddenImg").fadeIn(1000);
+           $("#hiddenImg").delay(2000).fadeOut(1000);
+           numHint--;
+           $("#hint").text(numHint + " hint");
+       }else{
+           alert("Show me your money");
+       }
+   }
 });
