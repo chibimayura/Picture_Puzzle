@@ -185,18 +185,18 @@ function completionChecker(){
         if (correctTileCount == totalTiles){
             alert("Finally! That took you a while...");
             clearInterval(secondInterval);
-            currentMin = minuteText.text();
-            currentSec = secondText.text();
-            if (stepCount < stepRecord){
-                stepRecord = stepCount;
-                database.ref("/stepRecord").set({
-                    bestStepRecord : stepRecord
-                });
-            }
-            if (currentMin <= minuteRecord && currentSec < secondRecord){
+            debugger;
+            if (minute <= minuteRecord && second <= secondRecord){
                 database.ref("/timeRecord").set({
-                    bestTimeRecord : currentMin + " : " + currentSec
+                    bestSecondRecord : second,
+                    bestMinuteRecord : minute
                 });
+                if (stepCount < stepRecord){
+                    stepRecord = stepCount;
+                    database.ref("/stepRecord").set({
+                        bestStepRecord : stepRecord
+                    });
+                };
             };
             gameStarted = false;
             setTimeout($("#target").sortedTiles(tileCount),1000);
@@ -213,11 +213,12 @@ database.ref("/stepRecord").on("value", function(snapshot){
 })
 
 database.ref("/timeRecord").on("value", function(snapshot){
-    if(snapshot.child("bestTimeRecord").exists()){
-        timeRecord = snapshot.val().bestTimeRecord;
-        $("#timeRecord").text(timeRecord);
+    if(snapshot.child("bestMinuteRecord").exists() && snapshot.child("bestSecondRecord").exists()){
+        minuteRecord = snapshot.val().bestMinuteRecord;
+        secondRecord = snapshot.val().bestSecondRecord;
+        $("#timeRecord").text(minuteRecord + " : " + secondRecord);
     }
-})
+});
 
 function timerSecond(){
     second ++;
@@ -270,10 +271,8 @@ $(document).on("click", "#restart", function(){
 $(document).on("click", "#giveUp", function(){
     event.preventDefault();
     clearInterval(secondInterval);
-    currentMin = $("#minute").text();
-    currentSec = $("#second").text();
     database.ref("/lastRecordedTime").push({
-        lastRecordedTime : currentMin + " : " + currentSec
+        lastRecordedTime : minute + " : " + second
     });
     database.ref("/lastRecordedStep").push({
         lastRecordedStep : stepCount
