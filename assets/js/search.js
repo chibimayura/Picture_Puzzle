@@ -7,6 +7,10 @@ var currentTopic = searchRecomArray[0];
 var optionSelector = $("#optionSelector");
 //Selects the area where the gifs are generated
 var generateGifSelector = $("#generatedSearch");
+// Selects the Save Area where gifs are saved
+var saveGifSelector = $("#savedSearch");
+
+//checks if anything is generated
 var generated = false;
 var randomGifs = 0;
 
@@ -90,8 +94,8 @@ function generateGiphys(){
 			});
 
 			//create save and play btn overlayed on the gif image, append to a div
-			saveBtn = $("<div>").attr("class", "gifBtn btn btn-dark").text("Save");
-			playGifPuzzleBtn = $("<div>").attr("class", "gifBtn btn btn-dark").text("Play")
+			saveBtn = $("<div>").attr("class", "gifBtn btn btn-dark").attr("id", "save").text("Save");
+			playGifPuzzleBtn = $("<div>").attr("class", "gifBtn btn btn-dark").attr("id", "play").text("Play")
 			newImageOptions = $("<div>").attr("class", ".gifPlayOption").append(saveBtn, playGifPuzzleBtn).hide();
 
 			newDiv.append(newImage,newImageOptions);
@@ -105,3 +109,10 @@ function generateGiphys(){
 		}
 	});
 }
+
+//move Items to Save Area Functions
+$(document).on("click", "#save", function(){
+	event.preventDefault();
+	saveGifSelector.append($(this).parent().parent());
+	$(this).remove();
+});

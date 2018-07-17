@@ -33,7 +33,6 @@
 		margin-left: 130px !important;
 		margin: auto;
 		position: inherit !important;
-		width: 100%;
 		height: 100%;
 		text-align: center;
 	}
@@ -131,6 +130,10 @@
 		opacity: 1;
 	}
 
+/*save bar style*/
+	#nav-saved {
+		padding-left: 10px;
+	}
 /*suggestion bar style*/
 	.thumbnail {
 		width: 200px;
