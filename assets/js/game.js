@@ -14,6 +14,8 @@ var database = firebase.database();
 var connectionsRef = database.ref("/connections");
 var connectedRef = database.ref(".info/connected");
 var playerDataRef = database.ref("/playerData");
+var timeRecordRef = database.ref("/timeRecord");
+var stepRecordRef = database.ref("/stepRecord");
 
 // html selectors
 var puzzleBoard = $("#board");
@@ -188,20 +190,20 @@ function completionChecker(){
         if (correctTileCount == totalTiles){
             alert("Finally! That took you a while...");
             clearInterval(secondInterval);            
-            if (minute = minuteRecord && second < secondRecord){
-                database.ref("/timeRecord").set({
+            if (minute == minuteRecord && second < secondRecord){
+                timeRecordRef.child(difficulty).set({
                     bestSecondRecord : second,
                     bestMinuteRecord : minute
                 });
             }else if (minute < minuteRecord){
-                database.ref("/timeRecord").set({
+                timeRecordRef.child(difficulty).set({
                     bestSecondRecord : second,
                     bestMinuteRecord : minute
                 });
             };
             if (stepCount < stepRecord){
                 stepRecord = stepCount;
-                database.ref("/stepRecord").set({
+                stepRecordRef.child(difficulty).set({
                     bestStepRecord : stepRecord
                 });
             };
@@ -212,20 +214,7 @@ function completionChecker(){
     }
 };
 
-database.ref("/stepRecord").on("value", function(snapshot){
-    if(snapshot.child("bestStepRecord").exists()){
-        stepRecord = snapshot.val().bestStepRecord;
-        $("#stepRecord").text(stepRecord);
-    }
-})
 
-database.ref("/timeRecord").on("value", function(snapshot){
-    if(snapshot.child("bestMinuteRecord").exists() && snapshot.child("bestSecondRecord").exists()){
-        minuteRecord = snapshot.val().bestMinuteRecord;
-        secondRecord = snapshot.val().bestSecondRecord;
-        $("#timeRecord").text(minuteRecord + " : " + secondRecord);
-    }
-});
 
 function timerSecond(){
     second ++;
@@ -248,6 +237,17 @@ function timerSecond(){
 $(document).on("click", ".difficulty", function(){
     event.preventDefault();
     difficulty = $(this).text();
+    stepRecordRef.on("value", function(snapshot){
+        stepRecord = snapshot.val()[difficulty].bestStepRecord;
+        $("#stepRecord").text(stepRecord);
+    })
+    
+    timeRecordRef.on("value", function(snapshot){
+        debugger;
+        minuteRecord = snapshot.val()[difficulty].bestMinuteRecord;
+        secondRecord = snapshot.val()[difficulty].bestSecondRecord;
+        $("#timeRecord").text(minuteRecord + " : " + secondRecord);
+    });
     $("#difficulty").remove();
     var newP = $("<p class='msg' id='difficulty'>").text("Difficulty Level - " + difficulty);
     $("#msgBoard").prepend(newP);
