@@ -36,6 +36,9 @@ var randomEmptyTile;
 // stores the num of tiles in correct place
 var correctTileCount = 0;
 
+// stores difficulty level
+var difficulty;
+
 // Tile position
 var tileZindex = 1; 
 var imgZindex = tileZindex + 1;
@@ -184,19 +187,23 @@ function completionChecker(){
         }
         if (correctTileCount == totalTiles){
             alert("Finally! That took you a while...");
-            clearInterval(secondInterval);
-            debugger;
-            if (minute <= minuteRecord && second <= secondRecord){
+            clearInterval(secondInterval);            
+            if (minute = minuteRecord && second < secondRecord){
                 database.ref("/timeRecord").set({
                     bestSecondRecord : second,
                     bestMinuteRecord : minute
                 });
-                if (stepCount < stepRecord){
-                    stepRecord = stepCount;
-                    database.ref("/stepRecord").set({
-                        bestStepRecord : stepRecord
-                    });
-                };
+            }else if (minute < minuteRecord){
+                database.ref("/timeRecord").set({
+                    bestSecondRecord : second,
+                    bestMinuteRecord : minute
+                });
+            };
+            if (stepCount < stepRecord){
+                stepRecord = stepCount;
+                database.ref("/stepRecord").set({
+                    bestStepRecord : stepRecord
+                });
             };
             gameStarted = false;
             setTimeout($("#target").sortedTiles(tileCount),1000);
@@ -240,6 +247,10 @@ function timerSecond(){
 
 $(document).on("click", ".difficulty", function(){
     event.preventDefault();
+    difficulty = $(this).text();
+    $("#difficulty").remove();
+    var newP = $("<p class='msg' id='difficulty'>").text("Difficulty Level - " + difficulty);
+    $("#msgBoard").prepend(newP);
     tileCount = parseInt($(this).attr("data-tileCount"));
     $("#target").sortedTiles(tileCount);
     return tileCount;
