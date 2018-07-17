@@ -26,10 +26,17 @@
 
         <!-- content inside tabs -->
         <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade show active" id="nav-search" role="tabpanel" aria-labelledby="nav-search-tab">
-                search bar
-                <br>
-                display search stuff
+            <div class="pl-2 tab-pane fade show active" id="nav-search" role="tabpanel" aria-labelledby="nav-search-tab">
+                <form>
+                    <input type="text" name="enterTagToSearch" placeholder="Enter a category to search...">
+                    <select id="optionSelector">
+                    </select>
+                    <button class="btn btn-dark position-relative float-right mr-3" id="searchGIF">Submit</button>
+                    <button class="btn btn-dark position-relative float-left mr-3" id="refresh">Refresh &#8635;</button>
+                </form>
+                <div id="generatedSearch">
+                    <!-- insert 3 random gifs from giphy api -->
+                </div>
             </div>
             <div class="tab-pane fade" id="nav-saved" role="tabpanel" aria-labelledby="nav-saved-tab">
                 saved stuff from search
@@ -65,7 +72,7 @@
                     <p class='msg'><span id='numPlayers'></span> people currently playing</p>
                     <p class='msg'>Steps: <span id='steps'></span></p>
                     <p class='msg'>Time: <span id="minute"></span> : <span id="second"></span></p>
-                    <img src="../Picture_Puzzle/assets/images/img_1000x600.jpg" alt="hidden" id="hiddenImg">
+                    <img src="assets/images/img_1000x600.jpg" alt="hidden" id="hiddenImg" class="m-auto">
                 </div>
                 <div id="target"></div>
             </div>
@@ -81,6 +88,7 @@
 
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="assets/js/search.js"></script>
     <script src="assets/js/game.js"></script>
 
     <!-- Bootstrap JS -->
