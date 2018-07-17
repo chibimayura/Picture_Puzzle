@@ -189,7 +189,7 @@ function completionChecker(){
             currentSec = secondText.text();
             if (stepCount < stepRecord){
                 stepRecord = stepCount;
-                database.reg("/stepRecord").set({
+                database.ref("/stepRecord").set({
                     bestStepRecord : stepRecord
                 });
             }
