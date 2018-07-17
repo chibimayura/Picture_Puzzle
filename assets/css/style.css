@@ -47,9 +47,11 @@
 		display: hidden;
 	    position: absolute;
 	    z-index: 2;
-	    left: 30%;
+	    left: 10%;
 	    width: auto;
 	    height: auto;
+	    right: 0;
+	    margin: auto;
 	}
 
 	.btn-primary {
@@ -83,8 +85,11 @@
 	}
 
 	#board {
-		left: 30%;
-		height: 100%;
+		left: 10%;
+		right: 0;
+		top: 24%;
+		margin: auto;
+		margin-bottom: 50px;
 	}
 
 /*search bar style*/
@@ -124,4 +129,15 @@
 
 	.gifPlayOption:hover {
 		opacity: 1;
+	}
+
+/*suggestion bar style*/
+	.thumbnail {
+		width: 200px;
+		margin: 20px 34px;
+		cursor: pointer;
+	}
+
+	#nav-suggestion{
+		text-align: center;
 	}
