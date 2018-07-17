@@ -118,6 +118,7 @@
 		margin: auto !important;
 		top: 0;
 		opacity: 0;
+		float: left;
 	}
 
 	.gifBtn {
