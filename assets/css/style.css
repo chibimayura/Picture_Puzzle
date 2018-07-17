@@ -14,7 +14,7 @@
 		top: 0;
 		left: 0;
 		height: 100%;
-		width: 290px;
+		width: 300px;
 		z-index: 1;
 		overflow-x: hidden;
 	}
@@ -30,7 +30,7 @@
 	}
 
 	.game {
-		margin-left: 125px !important;
+		margin-left: 130px !important;
 		margin: auto;
 		position: inherit !important;
 		width: 100%;
@@ -44,10 +44,14 @@
 
 /*game related style*/
 	#hiddenImg {
-	    display: none;
+		display: hidden;
 	    position: absolute;
 	    z-index: 2;
-	    left: 30%;
+	    left: 10%;
+	    width: auto;
+	    height: auto;
+	    right: 0;
+	    margin: auto;
 	}
 
 	.btn-primary {
@@ -81,17 +85,59 @@
 	}
 
 	#board {
-		left: 30%;
-		height: 100%;
+		left: 10%;
+		right: 0;
+		top: 24%;
+		margin: auto;
+		margin-bottom: 50px;
 	}
 
 /*search bar style*/
-	select {
-		width: 90%;
-	}
+	select, input {
+		width: 95%;
+		margin-bottom: 5px;
+	}	
 
 	#generatedSearch img, #savedSearch img, #suggestedPuzzle img {
 		position: relative;
 		width: 90%;
 		height: 90%;
+
+		clear: both;
+		margin: 20px 0 20px 10px;
+		overflow-y: auto;
+	}
+
+	#gif {
+		position: relative;
+	}
+
+	.gifPlayOption {
+		position: absolute !important;
+		width: 100%;
+		height: auto;
+		margin: auto !important;
+		top: 0;
+		opacity: 0;
+	}
+
+	.gifBtn {
+		position: relative;
+		top: -90px;
+		left: 25%;
+	}
+
+	.gifPlayOption:hover {
+		opacity: 1;
+	}
+
+/*suggestion bar style*/
+	.thumbnail {
+		width: 200px;
+		margin: 20px 34px;
+		cursor: pointer;
+	}
+
+	#nav-suggestion{
+		text-align: center;
 	}
