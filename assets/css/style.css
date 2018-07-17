@@ -14,7 +14,7 @@
 		top: 0;
 		left: 0;
 		height: 100%;
-		width: 290px;
+		width: 300px;
 		z-index: 1;
 		overflow-x: hidden;
 	}
@@ -47,7 +47,9 @@
 	    display: none;
 	    position: absolute;
 	    z-index: 2;
-	    left: 30%;
+	    left: 300px;
+		right: 0;
+		margin: auto
 	}
 
 
@@ -82,8 +84,11 @@
 	}
 
 	#board {
-		left: 30%;
-		height: 100%;
+		top: 223px;
+		left: 300px;
+		right: 0;
+		margin: auto;
+		margin-bottom: 50px;
 	}
 
 /*search bar style*/
@@ -95,4 +100,15 @@
 		position: relative;
 		width: 90%;
 		height: 90%;
+	}
+
+/*suggestion bar style*/
+	.thumbnail {
+		width: 200px;
+		margin: 20px 34px;
+		cursor: pointer;
+	}
+
+	#nav-suggestion{
+		text-align: center;
 	}
