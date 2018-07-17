@@ -115,9 +115,9 @@ $.fn.extend({ createGame:function(pieces){
     secondInterval = setInterval(timerSecond, 1000);
     gameStarted = true;
     $(".btn-primary").hide();
-    var giveupBTN = $("<button class='newButtonSpacing btn btn-primary' id='giveUp'>I GIVE UP!</button>");
-    var hintBTN = $("<button class='newButtonSpacing btn btn-primary' id='hint'>" + numHint + " hints</button>");
-    var restartBTN = $("<button class='btn-primary' id='restart'>Restart</button>")
+    var giveupBTN = $("<button class='newButtonSpacing btn-primary delete' id='giveUp'>I GIVE UP!</button>");
+    var hintBTN = $("<button class='newButtonSpacing btn-primary delete' id='hint'>" + numHint + " hints</button>");
+    var restartBTN = $("<button class='btn-primary delete' id='restart'>Restart</button>")
     $("#btns").append(restartBTN, hintBTN, giveupBTN);
     var targetElement = "#" + $(this).attr("id");
     tileWidth = Math.floor(imgWidth / pieces);
@@ -279,6 +279,8 @@ $(document).on("click", "#giveUp", function(){
     });
     gameStarted = false;
     $("#target").sortedTiles(tileCount);
+    $(".btn").show();
+    $(".delete").remove();
 });
 
 $(document).on("click", "#hint", function (){
