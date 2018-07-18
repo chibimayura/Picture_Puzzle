@@ -69,7 +69,7 @@ var correctTileCount = 0;
 var stepRecord = 0;
 
 // stores completed images
-var completedImg = JSON.parse(localStorage.getItem("completedImgArr"));
+var completedImg = [];
 
 // text Selector for time and steps
 secondText.text("0" + second);
@@ -77,6 +77,9 @@ minuteText.text("0" + minute);
 stepsText.text(stepCount);
 $("#hiddenImg").attr("src", imageSRC);
 $("#hiddenImg").hide();
+if (localStorage.getItem("completedImgArr") != null){
+    completedImg = JSON.parse(localStorage.getItem("completedImgArr"));
+};
 
 connectedRef.on("value", function(snap) {
     if (snap.val()) {
@@ -132,7 +135,7 @@ $.fn.extend({ createGame:function(pieces){
     }
     randomEmptyTile = Math.ceil(Math.random() * totalTiles);
     $(targetElement).html("<div id = 'board'></div>");
-    $("#board").css({ position:'absolute', width: imgWidth, height: imgHeight});
+    $("#board").css({ position:'relative', width: imgWidth, height: imgHeight});
         tileSequence.sort(function(a, b){return 0.5 - Math.random()});
         for (var i = 0; i < totalTiles; i++){
             $("#board").append("<div class='tiles' data-sequence = " + tileSequence[i].tileNumber + " positionleft = " + tileSequence[i].left + " positiontop = " + tileSequence[i].top  + "  style = 'position: absolute; left: " + ((i % tileCount) * tileWidth) + "px; top: " + Math.floor(i / tileCount) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; background: #ffffff url(" + imageSRC + ") " + (-(tileSequence[i].tileNumber % tileCount) * tileWidth) + "px " + -Math.floor(tileSequence[i].tileNumber / tileCount) * tileHeight + "px no-repeat !important'></div>");
@@ -336,12 +339,14 @@ $(document).on("click", "#hint", function(event){
 
 $(document).on("click", "#nav-completed-tab", function(){
     event.preventDefault();
-    $("#nav-completed").empty();
-    localStorage.setItem("completedImgArr", JSON.stringify(completedImg));
-    completedImg = JSON.parse(localStorage.getItem("completedImgArr"));
-    $('#nav-completed-p').remove();
-    for (var i=0; i < completedImg.length; i++){
-        var displayCompImg = $("<img class='completed' alt='completed_images'>").attr('src', completedImg[i]);
-        $('#nav-completed').append(displayCompImg);
-    }
+    if(completedImg.length != 0){
+        $("#nav-completed").empty();
+        localStorage.setItem("completedImgArr", JSON.stringify(completedImg));
+        completedImg = JSON.parse(localStorage.getItem("completedImgArr"));
+        $('#nav-completed-p').remove();
+        for (var i=0; i < completedImg.length; i++){
+            var displayCompImg = $("<img class='completed' alt='completed_images'>").attr('src', completedImg[i]);
+            $('#nav-completed').append(displayCompImg);
+        };
+    };
 });
