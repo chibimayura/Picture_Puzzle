@@ -19,7 +19,12 @@
 		overflow-x: hidden;
 	}
 
+	.sidebar a {
+		font-size: 15px;
+	}
+
 	.sidebar a, .game a{
+		font-size: 15px;
 		background-color: #282828;
 		color: #fff;
 	}
@@ -99,8 +104,6 @@
 	#generatedSearch img, #savedSearch img, #suggestedPuzzle img {
 		position: relative;
 		width: 90%;
-		height: 90%;
-
 		clear: both;
 		margin: 20px 0 20px 10px;
 		overflow-y: auto;
@@ -126,7 +129,7 @@
 	#nav-saved {
 		padding-left: 10px;
 	}
-	
+
 /*suggestion bar style*/
 	.thumbnail {
 		width: 200px;
