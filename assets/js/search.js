@@ -96,9 +96,9 @@ function generateGiphys(){
 			});
 
 			//create save and play btn overlayed on the gif image, append to a div
-			saveBtn = $("<div>").attr("class", "gifBtn btn btn-dark").attr("class", "save").text("Save");
-			playGifPuzzleBtn = $("<div>").attr("class", "gifBtn btn btn-dark").attr("class", "play").text("Play")
-			newImageOptions = $("<div>").attr("class", "gifPlayOption").append(saveBtn, playGifPuzzleBtn).hide();
+			saveBtn = $("<div>").attr("class", "gifBtn btn btn-dark save").text("Save");
+			playGifPuzzleBtn = $("<div>").attr("class", "gifBtn btn btn-dark play").text("Play")
+			newImageOptions = $("<div>").attr("class", "gifPlayOption").append(saveBtn, playGifPuzzleBtn);//.hide();
 
 			newDiv.append(newImage,newImageOptions);
 

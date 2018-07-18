@@ -106,7 +106,7 @@
 		overflow-y: auto;
 	}
 
-	#gif {
+	.gif {
 		position: relative;
 	}
 
@@ -116,7 +116,6 @@
 
 	.gifBtn {
 		position: relative;
-		/*top: -125px;*/
 		margin-top: -250%;
 		left: 75%;
 	}
