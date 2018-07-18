@@ -214,8 +214,6 @@ function completionChecker(){
     }
 };
 
-
-
 function timerSecond(){
     second ++;
     if(second < 10){
@@ -243,10 +241,15 @@ $(document).on("click", ".difficulty", function(){
     })
     
     timeRecordRef.on("value", function(snapshot){
-        debugger;
         minuteRecord = snapshot.val()[difficulty].bestMinuteRecord;
         secondRecord = snapshot.val()[difficulty].bestSecondRecord;
-        $("#timeRecord").text(minuteRecord + " : " + secondRecord);
+        if(minuteRecord < 10 && secondRecord < 10){
+            $("#timeRecord").text("0" + minuteRecord + " : 0" + secondRecord);
+        }else if (minuteRecord >= 10 && secondRecord < 10){
+            $("#timeRecord").text(minuteRecord + " : 0" + secondRecord);
+        }else{
+            $("#timeRecord").text(minuteRecord + " : " + secondRecord);
+        };
     });
     $("#difficulty").remove();
     var newP = $("<p class='msg' id='difficulty'>").text("Difficulty Level - " + difficulty);
@@ -271,6 +274,7 @@ $(document).on("click", "#restart", function(){
         clearInterval(secondInterval);
         second = 0;
         minute = 0;
+        $(".delete").remove();
         $("#second").text("0" + second);
         $("#minute").text("0" + minute);
         stepCount = initialStep;
