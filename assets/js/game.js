@@ -68,13 +68,8 @@ var stepCount = initialStep;
 var correctTileCount = 0;
 var stepRecord = 0;
 
-// stores puzzle image src
-// var puzzleImage = "../images/img_1000x600.jpg";
-// var defaultPuzzle = $("<img id='hiddenImg' alt='hidden'>").attr("src", puzzleImage);
-// $("#msgBoard").append(defaultPuzzle);
-
 // stores completed images
-var completedImg = [];
+var completedImg = JSON.parse(localStorage.getItem("completedImgArr"));
 
 // text Selector for time and steps
 secondText.text("0" + second);
@@ -83,9 +78,8 @@ stepsText.text(stepCount);
 $("#hiddenImg").attr("src", imageSRC);
 $("#hiddenImg").hide();
 
-
-connectedRef.on("value", function(snap) {
-    if (snap.val()) {
+connectedRef.on("value", function(snap){
+    if (snap.val()){
         var con = connectionsRef.push(true);
         con.onDisconnect().remove();
     }
@@ -142,14 +136,14 @@ $.fn.extend({ createGame:function(pieces){
         tileSequence.sort(function(a, b){return 0.5 - Math.random()});
         for (var i = 0; i < totalTiles; i++){
             $("#board").append("<div class='tiles' data-sequence = " + tileSequence[i].tileNumber + " positionleft = " + tileSequence[i].left + " positiontop = " + tileSequence[i].top  + "  style = 'position: absolute; left: " + ((i % tileCount) * tileWidth) + "px; top: " + Math.floor(i / tileCount) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; background: #ffffff url(" + imageSRC + ") " + (-(tileSequence[i].tileNumber % tileCount) * tileWidth) + "px " + -Math.floor(tileSequence[i].tileNumber / tileCount) * tileHeight + "px no-repeat !important'></div>");
-        }
+        };
     $("#board").children("div:nth-child(" + randomEmptyTile + ")").css({backgroundImage: "", background: "#ffffff"});
     $("#board").children("div").click(function(){
         if (gameStarted = true){
             Move(this, tileWidth, tileHeight);
         }else{
             return gameStarted = false;
-        }
+        };
     });
     }
 });
@@ -211,21 +205,24 @@ function completionChecker(){
                 stepRecordRef.child(difficulty).set({
                     bestStepRecord : stepRecord
                 });
-
             };
             gameStarted = false;
             setTimeout($("#target").sortedTiles(tileCount),1000);
         }
-    }
+    };
 };
 
-function addCompleteImg() {
+function addCompleteImg(){
     if (completedImg.indexOf($('#hiddenImg').attr('src')) == -1) {
         completedImg.push($('#hiddenImg').attr('src'));
+        localStorage.setItem("completedImgArr", JSON.stringify(completedImg));
+        completedImg = JSON.parse(localStorage.getItem("completedImgArr"));
         $('#nav-completed-p').remove();
-            var displayCompImg = $("<img class = 'completed' alt = 'completed_images'>").attr('src', $('#hiddenImg').attr('src'))
+        for (var i=0; i < completedImg.length; i++){
+            var displayCompImg = $("<img class='completed' alt='completed_images'>").attr('src', $('#hiddenImg').attr('src'));
             $('#nav-completed').append(displayCompImg);
-    }
+        }
+    };
 };
 
 function timerSecond(){
@@ -318,7 +315,7 @@ $(document).on("click", "#giveUp", function(event){
     $(".delete").remove();
 });
 
-$(document).on("click", "#hint", function (event){
+$(document).on("click", "#hint", function(event){
     event.preventDefault();
     if (gameStarted == true){
         if(numHint > 1){
@@ -334,5 +331,17 @@ $(document).on("click", "#hint", function (event){
         }else{
             alert("Show me your money");
         }
+    }
+});
+
+$(document).on("click", "#nav-completed-tab", function(){
+    event.preventDefault();
+    $("#nav-completed").empty();
+    localStorage.setItem("completedImgArr", JSON.stringify(completedImg));
+    completedImg = JSON.parse(localStorage.getItem("completedImgArr"));
+    $('#nav-completed-p').remove();
+    for (var i=0; i < completedImg.length; i++){
+        var displayCompImg = $("<img class='completed' alt='completed_images'>").attr('src', completedImg[i]);
+        $('#nav-completed').append(displayCompImg);
     }
 });
