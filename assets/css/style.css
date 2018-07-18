@@ -109,35 +109,26 @@
 		overflow-y: auto;
 	}
 
-	#gif {
+	.gif {
 		position: relative;
 	}
 
 	.gifPlayOption {
 		position: absolute !important;
-		width: 100%;
-		height: auto;
-		margin: auto !important;
-		top: 0;
-		opacity: 0;
-		float: left;
 	}
 
 	.gifBtn {
 		position: relative;
-		top: -90px;
-		left: 25%;
-	}
-
-	.gifPlayOption:hover {
-		opacity: 1;
+		left: 75%;
+		right: 75%;
+		margin-top: -100%;
+		margin-bottom: 100%;
 	}
 
 /*save bar style*/
 	#nav-saved {
 		padding-left: 10px;
 	}
-
 /*suggestion bar style*/
 	.thumbnail {
 		width: 200px;
