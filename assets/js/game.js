@@ -81,11 +81,8 @@ secondText.text("0" + second);
 minuteText.text("0" + minute);
 stepsText.text(stepCount);
 $("#hiddenImg").attr("src", imageSRC);
-<<<<<<< HEAD
-// $("#hiddenImg").hide();
-=======
 $("#hiddenImg").hide();
->>>>>>> master
+
 
 connectedRef.on("value", function(snap) {
     if (snap.val()) {
