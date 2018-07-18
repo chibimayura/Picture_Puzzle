@@ -56,11 +56,11 @@ $("form").on("click", "#searchGIF",function(event){
 $(document).on("mouseenter", ".gifContainer", function(){
 	$(this).children("img").attr("src", $(this).children("img").attr("data-animate"));
 	$(this).children("div").fadeIn(1000);
-	$(this).children("img").css("opacity", "0.3");
+	$(this).children("img").fadeTo("opacity", "0.3");
 }).on("mouseleave", ".gifContainer", function(){
 	$(this).children("img").attr("src", $(this).children("img").attr("data-still"));
 	$(this).children("div").fadeOut(10);
-	$(this).children("img").css("opacity", "1");
+	$(this).children("img").fadeTo("opacity", "1");
 });
 
 //Gifs Refresh when Refresh button is pressed
@@ -92,13 +92,13 @@ function generateGiphys(){
 				"data-state" : "still",
 				"data-still" : stillGif,
 				"data-animate" : animateGif,
-				"id" : "gif"
+				"class" : "gif"
 			});
 
 			//create save and play btn overlayed on the gif image, append to a div
-			saveBtn = $("<div>").attr("class", "gifBtn btn btn-dark").attr("id", "save").text("Save");
-			playGifPuzzleBtn = $("<div>").attr("class", "gifBtn btn btn-dark").attr("id", "play").text("Play")
-			newImageOptions = $("<div>").attr("class", ".gifPlayOption").append(saveBtn, playGifPuzzleBtn);//.hide();
+			saveBtn = $("<div>").attr("class", "gifBtn btn btn-dark save").text("Save");
+			playGifPuzzleBtn = $("<div>").attr("class", "gifBtn btn btn-dark play").text("Play")
+			newImageOptions = $("<div>").attr("class", "gifPlayOption").append(saveBtn, playGifPuzzleBtn);//.hide();
 
 			newDiv.append(newImage,newImageOptions);
 
@@ -113,7 +113,7 @@ function generateGiphys(){
 }
 
 // move Items to Save Area Functions
-$(document).on("click", "#save", function(){
+$(document).on("click", ".save", function(){
 	event.preventDefault();
 	saveGifSelector.append($(this).parent().parent());
 	$(this).remove();
