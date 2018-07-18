@@ -116,14 +116,17 @@
 
 	.gifBtn {
 		position: relative;
-		margin-top: -250%;
 		left: 75%;
+		right: 75%;
+		margin-top: -100%;
+		margin-bottom: 100%;
 	}
 
 /*save bar style*/
 	#nav-saved {
 		padding-left: 10px;
 	}
+	
 /*suggestion bar style*/
 	.thumbnail {
 		width: 200px;

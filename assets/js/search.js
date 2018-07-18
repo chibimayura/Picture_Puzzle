@@ -113,7 +113,7 @@ function generateGiphys(){
 }
 
 // move Items to Save Area Functions
-$(document).on("click", "#save", function(){
+$(document).on("click", ".save", function(){
 	event.preventDefault();
 	saveGifSelector.append($(this).parent().parent());
 	$(this).remove();
