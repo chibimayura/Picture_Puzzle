@@ -112,3 +112,17 @@
 	#nav-suggestion{
 		text-align: center;
 	}
+
+/*completed images*/
+	.completed {
+		height: 200px;
+		padding: 20px;
+		cursor: pointer;
+		border-radius: 5px;
+		transition: 0.3s;
+	}
+
+	.completed:hover {
+		opacity: 0.7;
+	}
+

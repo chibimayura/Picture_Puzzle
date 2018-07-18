@@ -68,6 +68,9 @@ var stepRecord = 0;
 // var defaultPuzzle = $("<img id='hiddenImg' alt='hidden'>").attr("src", puzzleImage);
 // $("#msgBoard").append(defaultPuzzle);
 
+// stores completed images
+var completedImg = [];
+
 // text Selector for time and steps
 secondText.text("0" + second);
 minuteText.text("0" + minute);
@@ -186,6 +189,8 @@ function completionChecker(){
         if (correctTileCount == totalTiles){
             alert("Finally! That took you a while...");
             clearInterval(secondInterval);
+
+            addCompleteImg();
 // debugger;
             if (minute <= minuteRecord && second <= secondRecord){
                 database.ref("/timeRecord").set({
@@ -205,6 +210,34 @@ function completionChecker(){
         }
     }
 };
+
+function addCompleteImg() {
+    if (completedImg.indexOf($('#hiddenImg').attr('src')) == -1) {
+        completedImg.push($('#hiddenImg').attr('src'));
+        console.log(completedImg);
+        $('#nav-completed').text(" ");
+
+        for (var i = 0; i < completedImg.length; i++) {
+            var displayCompImg = $("<img class = 'completed' alt = 'completed images'>").attr('src', completedImg[i])
+            $('#nav-completed').append(displayCompImg);
+        }
+    }
+};
+
+$(document).on('click', '.completed', function() {
+    var modal = document.getElementById('myModal');
+    var img = document.getElementsByClassName('completed');
+    var modalImg = document.getElementById("img01");
+    img.onclick = function(){
+    modal.style.display = "block";
+    modalImg.src = this.src;
+    }
+});
+var span = document.getElementsByClassName("close")[0];
+span.onclick = function() { 
+    modal.style.display = "none";
+}
+
 
 database.ref("/stepRecord").on("value", function(snapshot){
     if(snapshot.child("bestStepRecord").exists()){
