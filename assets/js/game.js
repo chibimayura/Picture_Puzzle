@@ -83,7 +83,6 @@ stepsText.text(stepCount);
 $("#hiddenImg").attr("src", imageSRC);
 $("#hiddenImg").hide();
 
-
 connectedRef.on("value", function(snap) {
     if (snap.val()) {
         var con = connectionsRef.push(true);
