@@ -14,6 +14,8 @@ var database = firebase.database();
 var connectionsRef = database.ref("/connections");
 var connectedRef = database.ref(".info/connected");
 var playerDataRef = database.ref("/playerData");
+var timeRecordRef = database.ref("/timeRecord");
+var stepRecordRef = database.ref("/stepRecord");
 
 // html selectors
 var puzzleBoard = $("#board");
@@ -35,6 +37,9 @@ var randomEmptyTile;
 
 // stores the num of tiles in correct place
 var correctTileCount = 0;
+
+// stores difficulty level
+var difficulty;
 
 // Tile position
 var tileZindex = 1; 
@@ -76,7 +81,11 @@ secondText.text("0" + second);
 minuteText.text("0" + minute);
 stepsText.text(stepCount);
 $("#hiddenImg").attr("src", imageSRC);
+<<<<<<< HEAD
 // $("#hiddenImg").hide();
+=======
+$("#hiddenImg").hide();
+>>>>>>> master
 
 connectedRef.on("value", function(snap) {
     if (snap.val()) {
@@ -188,21 +197,27 @@ function completionChecker(){
         }
         if (correctTileCount == totalTiles){
             alert("Finally! That took you a while...");
-            clearInterval(secondInterval);
 
+            clearInterval(secondInterval);
             addCompleteImg();
-// debugger;
-            if (minute <= minuteRecord && second <= secondRecord){
-                database.ref("/timeRecord").set({
+           
+            if (minute == minuteRecord && second < secondRecord){
+                timeRecordRef.child(difficulty).set({
                     bestSecondRecord : second,
                     bestMinuteRecord : minute
                 });
-                if (stepCount < stepRecord){
-                    stepRecord = stepCount;
-                    database.ref("/stepRecord").set({
-                        bestStepRecord : stepRecord
-                    });
-                };
+            }else if (minute < minuteRecord){
+                timeRecordRef.child(difficulty).set({
+                    bestSecondRecord : second,
+                    bestMinuteRecord : minute
+                });
+            };
+            if (stepCount < stepRecord){
+                stepRecord = stepCount;
+                stepRecordRef.child(difficulty).set({
+                    bestStepRecord : stepRecord
+                });
+
             };
             gameStarted = false;
             setTimeout($("#target").sortedTiles(tileCount),1000);
@@ -274,6 +289,21 @@ function timerSecond(){
 
 $(document).on("click", ".difficulty", function(event){
     event.preventDefault();
+    difficulty = $(this).text();
+    stepRecordRef.on("value", function(snapshot){
+        stepRecord = snapshot.val()[difficulty].bestStepRecord;
+        $("#stepRecord").text(stepRecord);
+    })
+    
+    timeRecordRef.on("value", function(snapshot){
+        debugger;
+        minuteRecord = snapshot.val()[difficulty].bestMinuteRecord;
+        secondRecord = snapshot.val()[difficulty].bestSecondRecord;
+        $("#timeRecord").text(minuteRecord + " : " + secondRecord);
+    });
+    $("#difficulty").remove();
+    var newP = $("<p class='msg' id='difficulty'>").text("Difficulty Level - " + difficulty);
+    $("#msgBoard").prepend(newP);
     tileCount = parseInt($(this).attr("data-tileCount"));
     $("#target").sortedTiles(tileCount);
     return tileCount;
@@ -290,7 +320,9 @@ $(document).on("click", "#start", function(event){
 
 $(document).on("click", "#restart", function(event){
     event.preventDefault();
-    // if(confirm("Are you sure?")){
+
+    if(confirm("Are you sure?")){
+
         clearInterval(secondInterval);
         second = 0;
         minute = 0;
@@ -299,7 +331,7 @@ $(document).on("click", "#restart", function(event){
         stepCount = initialStep;
         stepsText.text(stepCount);
         target.createGame(tileCount);
-    // }
+    }
 });
 
 $(document).on("click", "#giveUp", function(event){
@@ -315,7 +347,7 @@ $(document).on("click", "#giveUp", function(event){
     $("#target").sortedTiles(tileCount);
     $(".btn").show();
     $(".delete").remove();
-    
+  
     second = 0;
     minute = 0;
     $("#second").text("0" + second);
