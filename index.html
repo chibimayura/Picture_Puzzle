@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -69,19 +69,22 @@
                     <button class="difficulty btn btn-primary" data-tileCount="3">Easy</button>
                     <button class="difficulty btn btn-primary" data-tileCount="4">Medium</button>
                     <button class="difficulty btn btn-primary" data-tileCount="5">Hard</button>
+                    <button class="difficulty btn btn-primary" data-tileCount="6">Insane</button>
                     <button class="btn btn-primary" id="start">Start</button>
                 </form>
                 <div id='msgBoard'>
                     <p class='msg'><span id='numPlayers'></span> people currently playing</p>
                     <p class='msg'>Step Record of this level: <span id='stepRecord'></span> steps</p>
                     <p class='msg'>Time Record of this level: <span id='timeRecord'></span></p>
+                    <p class='msg'>Steps: <span id='steps'></span></p>
+                    <p class='msg'>Time: <span id="minute"></span> : <span id="second"></span></p>
                     <img src="assets/images/img_1000x600.jpg" alt="hidden" id="hiddenImg" class="m-auto">
                 </div>
                 <div id="target"></div>
             </div>
 
             <div class="tab-pane fade" id="nav-completed" role="tabpanel" aria-labelledby="nav-completed-tab">
-                You haven't completed any games yet
+                <p id="nav-completed-p">You haven't completed any games yet</p>
             </div>
             <div class="tab-pane fade" id="nav-ranking" role="tabpanel" aria-labelledby="nav-ranking-tab">
                 Ranking display
@@ -92,6 +95,7 @@
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="assets/js/search.js"></script>
+    <script src="assets/js/suggestion.js"></script>
     <script src="assets/js/game.js"></script>
 
     <!-- Bootstrap JS -->
