@@ -103,7 +103,7 @@ $.fn.extend({ sortedTiles:function(pieces){
     }
     randomEmptyTile = Math.ceil(Math.random() * totalTiles);
     $(targetElement).html("<div id = 'board'></div>");
-    $("#board").css({ position:'absolute', width: imgWidth, height: imgHeight});
+    $("#board").css({ position:'relative', width: imgWidth, height: imgHeight});
         for (var i = 0; i < totalTiles; i++){
             $("#board").append("<div data-sequence = " + tileSequence[i] + " style = 'position: absolute; left: " + ((i % tileCount) * tileWidth) + "px; top: " + Math.floor(i / tileCount) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; background: #ffffff url(" + imageSRC + ") " + (-(tileSequence[i] % tileCount) * tileWidth) + "px " + -Math.floor(tileSequence[i] / tileCount) * tileHeight + "px no-repeat !important'></div>");
         }

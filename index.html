@@ -13,85 +13,87 @@
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
 </head>
 <body>
-    <!-- sidebar to allow users to search, store and look at recommended puzzles -->
-    <div class="sidebar">
-        <!-- navigation for tabs -->
-        <nav class="ml-2 my-2">
-          <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <a class="nav-item nav-link active" id="nav-search-tab" data-toggle="tab" href="#nav-search" role="tab" aria-controls="nav-search" aria-selected="true">Search</a>
-            <a class="nav-item nav-link" id="nav-saved-tab" data-toggle="tab" href="#nav-saved" role="tab" aria-controls="nav-saved" aria-selected="false">Saved</a>
-            <a class="nav-item nav-link" id="nav-suggestion-tab" data-toggle="tab" href="#nav-suggestion" role="tab" aria-controls="nav-suggestion" aria-selected="false">Suggestion</a>
-          </div>
-        </nav>
+    <div class="container">
+        <!-- sidebar to allow users to search, store and look at recommended puzzles -->
+        <div class="sidebar">
+            <!-- navigation for tabs -->
+            <nav class="ml-2 my-2">
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link active" id="nav-search-tab" data-toggle="tab" href="#nav-search" role="tab" aria-controls="nav-search" aria-selected="true">Search</a>
+                <a class="nav-item nav-link" id="nav-saved-tab" data-toggle="tab" href="#nav-saved" role="tab" aria-controls="nav-saved" aria-selected="false">Saved</a>
+                <a class="nav-item nav-link" id="nav-suggestion-tab" data-toggle="tab" href="#nav-suggestion" role="tab" aria-controls="nav-suggestion" aria-selected="false">Suggestion</a>
+            </div>
+            </nav>
 
-        <!-- content inside tabs -->
-        <div class="tab-content" id="nav-tabContent">
-            <div class="pl-2 tab-pane fade show active" id="nav-search" role="tabpanel" aria-labelledby="nav-search-tab">
-                <form>
-                    <input type="text" name="enterTagToSearch" placeholder="Enter a category to search...">
-                    <select id="optionSelector">
-                    </select>
-                    <button class="btn btn-dark position-relative float-right mr-3" id="searchGIF">Submit</button>
-                    <button class="btn btn-dark position-relative float-left mr-3" id="refresh">Refresh &#8635;</button>
-                </form>
-                <div id="generatedSearch">
-                    <!-- insert 3 random gifs from giphy api -->
+            <!-- content inside tabs -->
+            <div class="tab-content" id="nav-tabContent">
+                <div class="pl-2 tab-pane fade show active" id="nav-search" role="tabpanel" aria-labelledby="nav-search-tab">
+                    <form>
+                        <input type="text" name="enterTagToSearch" placeholder="Enter a category to search...">
+                        <select id="optionSelector">
+                        </select>
+                        <button class="btn btn-dark position-relative float-right mr-3" id="searchGIF">Submit</button>
+                        <button class="btn btn-dark position-relative float-left mr-3" id="refresh">Refresh &#8635;</button>
+                    </form>
+                    <div id="generatedSearch">
+                        <!-- insert 3 random gifs from giphy api -->
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="nav-saved" role="tabpanel" aria-labelledby="nav-saved-tab">
+                    <h3>Saved Gifs</h3>
+                    <p>Save items will be removed after playing</p>
+                    <div id="savedSearch">
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="nav-suggestion" role="tabpanel" aria-labelledby="nav-suggestion-tab">
+                    recommended puzzles to play
                 </div>
             </div>
-            <div class="tab-pane fade" id="nav-saved" role="tabpanel" aria-labelledby="nav-saved-tab">
-                <h3>Saved Gifs</h3>
-                <p>Save items will be removed after playing</p>
-                <div id="savedSearch">
-                </div>
+        </div>
+
+        <!-- game area centered to the rest of the page -->
+        <div class="game text-center m-auto">
+            <!-- navigation for tabs -->
+            <nav class="my-2">
+            <div class="nav justify-content-center nav-tabs" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link active" id="nav-game-tab" data-toggle="tab" href="#nav-game" role="tab" aria-controls="nav-game" aria-selected="true">Puzzle</a>
+                <a class="nav-item nav-link" id="nav-completed-tab" data-toggle="tab" href="#nav-completed" role="tab" aria-controls="nav-completed" aria-selected="false">Completed</a>
+                <a class="nav-item nav-link" id="nav-ranking-tab" data-toggle="tab" href="#nav-ranking" role="tab" aria-controls="nav-ranking" aria-selected="false">Ranking</a>
             </div>
-            <div class="tab-pane fade" id="nav-suggestion" role="tabpanel" aria-labelledby="nav-suggestion-tab">
-                recommended puzzles to play
+            </nav>
+
+            <!-- content inside tabs -->
+            <div class="tab-content" id="nav-tabContent">
+                <!-- Game Content -->
+                <div class="tab-pane fade show active" id="nav-game" role="tabpanel" aria-labelledby="nav-game-tab">
+                    <form id='btns'>
+                        <button class="difficulty btn btn-primary" data-tileCount="3">Easy</button>
+                        <button class="difficulty btn btn-primary" data-tileCount="4">Medium</button>
+                        <button class="difficulty btn btn-primary" data-tileCount="5">Hard</button>
+                        <button class="difficulty btn btn-primary" data-tileCount="6">Insane</button>
+                        <button class="btn btn-primary" id="start">Start</button>
+                    </form>
+                    <div id='msgBoard'>
+                        <p class='msg'><span id='numPlayers'></span> people currently playing</p>
+                        <p class='msg'>Step Record of this level: <span id='stepRecord'></span> steps</p>
+                        <p class='msg'>Time Record of this level: <span id='timeRecord'></span></p>
+                        <p class='msg'>Steps: <span id='steps'></span></p>
+                        <p class='msg'>Time: <span id="minute"></span> : <span id="second"></span></p>
+                        <img src="assets/images/img_1000x600.jpg" alt="hidden" id="hiddenImg" class="m-auto">
+                    </div>
+                    <div id="target"></div>
+                </div>
+
+                <div class="tab-pane fade" id="nav-completed" role="tabpanel" aria-labelledby="nav-completed-tab">
+                    <p id="nav-completed-p">You haven't completed any games yet</p>
+                </div>
+                <div class="tab-pane fade" id="nav-ranking" role="tabpanel" aria-labelledby="nav-ranking-tab">
+                    Ranking display
+                </div>
             </div>
         </div>
     </div>
-
-    <!-- game area centered to the rest of the page -->
-    <div class="game text-center m-auto">
-        <!-- navigation for tabs -->
-        <nav class="my-2">
-          <div class="nav justify-content-center nav-tabs" id="nav-tab" role="tablist">
-            <a class="nav-item nav-link active" id="nav-game-tab" data-toggle="tab" href="#nav-game" role="tab" aria-controls="nav-game" aria-selected="true">Puzzle</a>
-            <a class="nav-item nav-link" id="nav-completed-tab" data-toggle="tab" href="#nav-completed" role="tab" aria-controls="nav-completed" aria-selected="false">Completed</a>
-            <a class="nav-item nav-link" id="nav-ranking-tab" data-toggle="tab" href="#nav-ranking" role="tab" aria-controls="nav-ranking" aria-selected="false">Ranking</a>
-          </div>
-        </nav>
-
-        <!-- content inside tabs -->
-        <div class="tab-content" id="nav-tabContent">
-            <!-- Game Content -->
-            <div class="tab-pane fade show active" id="nav-game" role="tabpanel" aria-labelledby="nav-game-tab">
-                <form id='btns'>
-                    <button class="difficulty btn btn-primary" data-tileCount="3">Easy</button>
-                    <button class="difficulty btn btn-primary" data-tileCount="4">Medium</button>
-                    <button class="difficulty btn btn-primary" data-tileCount="5">Hard</button>
-                    <button class="difficulty btn btn-primary" data-tileCount="6">Insane</button>
-                    <button class="btn btn-primary" id="start">Start</button>
-                </form>
-                <div id='msgBoard'>
-                    <p class='msg'><span id='numPlayers'></span> people currently playing</p>
-                    <p class='msg'>Step Record of this level: <span id='stepRecord'></span> steps</p>
-                    <p class='msg'>Time Record of this level: <span id='timeRecord'></span></p>
-                    <p class='msg'>Steps: <span id='steps'></span></p>
-                    <p class='msg'>Time: <span id="minute"></span> : <span id="second"></span></p>
-                    <img src="assets/images/img_1000x600.jpg" alt="hidden" id="hiddenImg" class="m-auto">
-                </div>
-                <div id="target"></div>
-            </div>
-
-            <div class="tab-pane fade" id="nav-completed" role="tabpanel" aria-labelledby="nav-completed-tab">
-                <p id="nav-completed-p">You haven't completed any games yet</p>
-            </div>
-            <div class="tab-pane fade" id="nav-ranking" role="tabpanel" aria-labelledby="nav-ranking-tab">
-                Ranking display
-            </div>
-        </div>
-    </div>
-
+    
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="assets/js/search.js"></script>
