@@ -1,23 +1,20 @@
-Priority List
+To-Do List
 
-Step 1:
+Completed:
 Use local images
 Break up into 9 tiles
-
-Step 2:
 Moving tiles on click
 Introduce difficulty level
 Check game completion
-
-Step 3:
 Allow search and save
 Record steps and time (firebase)
-
-Step 4:
-Add hint(unlimited)
-Allow completed puzzles (firebase)
-
-Step 5:
 Limit amount of hint
 Record num of players connected (firebase)
+Locally save completed puzzles
+
+To-Do:
+Collatpsable side menu
+Allow completed puzzles (firebase)
 Allow one-click download
+Tile moving sound effect
+Firebase Auth
