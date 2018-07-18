@@ -1,6 +1,7 @@
 var suggestedArray = 
     [
-    "../Picture_Puzzle/assets/images/numbers.jpg",
+	"../Picture_Puzzle/assets/images/numbers_9_pieces.jpg",
+	"../Picture_Puzzle/assets/images/numbers_16_pieces.png",
     "../Picture_Puzzle/assets/images/Pembroke-Welsh-Corgi-MP.jpg",
     "../Picture_Puzzle/assets/images/img_1000x600.jpg",
     "../Picture_Puzzle/assets/images/img_800x600.jpg",
