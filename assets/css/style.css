@@ -17,6 +17,7 @@
 		width: 300px;
 		z-index: 1;
 		overflow-x: hidden;
+		float: left;
 	}
 
 	.sidebar a {
@@ -91,9 +92,8 @@
 	}
 
 	#board {
-
-		left: 10%;
-		right: 0;
+		left: auto;
+		right: auto;
 		margin: auto;
 		margin-bottom: 50px;
 	}
