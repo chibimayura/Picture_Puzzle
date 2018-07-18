@@ -73,12 +73,16 @@ var stepRecord = 0;
 // var defaultPuzzle = $("<img id='hiddenImg' alt='hidden'>").attr("src", puzzleImage);
 // $("#msgBoard").append(defaultPuzzle);
 
+// stores completed images
+var completedImg = [];
+
 // text Selector for time and steps
 secondText.text("0" + second);
 minuteText.text("0" + minute);
 stepsText.text(stepCount);
 $("#hiddenImg").attr("src", imageSRC);
 $("#hiddenImg").hide();
+
 
 connectedRef.on("value", function(snap) {
     if (snap.val()) {
@@ -132,10 +136,11 @@ $.fn.extend({ createGame:function(pieces){
     for (var i=0; i<totalTiles; i++){
         tileSequence.push({"tileNumber" : i, "left" : ((i % tileCount) * tileWidth) + "px", "top" : Math.floor(i / tileCount) * tileHeight + "px"});
     }
-    randomEmptyTile = Math.ceil(Math.random() * totalTiles);
+    // randomEmptyTile = Math.ceil(Math.random() * totalTiles);
+    randomEmptyTile = totalTiles;
     $(targetElement).html("<div id = 'board'></div>");
     $("#board").css({ position:'absolute', width: imgWidth, height: imgHeight});
-        tileSequence.sort(function(a, b){return 0.5 - Math.random()});
+        // tileSequence.sort(function(a, b){return 0.5 - Math.random()});
         for (var i = 0; i < totalTiles; i++){
             $("#board").append("<div class='tiles' data-sequence = " + tileSequence[i].tileNumber + " positionleft = " + tileSequence[i].left + " positiontop = " + tileSequence[i].top  + "  style = 'position: absolute; left: " + ((i % tileCount) * tileWidth) + "px; top: " + Math.floor(i / tileCount) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; background: #ffffff url(" + imageSRC + ") " + (-(tileSequence[i].tileNumber % tileCount) * tileWidth) + "px " + -Math.floor(tileSequence[i].tileNumber / tileCount) * tileHeight + "px no-repeat !important'></div>");
         }
@@ -189,7 +194,10 @@ function completionChecker(){
         }
         if (correctTileCount == totalTiles){
             alert("Finally! That took you a while...");
-            clearInterval(secondInterval);            
+
+            clearInterval(secondInterval);
+            addCompleteImg();
+           
             if (minute == minuteRecord && second < secondRecord){
                 timeRecordRef.child(difficulty).set({
                     bestSecondRecord : second,
@@ -206,6 +214,7 @@ function completionChecker(){
                 stepRecordRef.child(difficulty).set({
                     bestStepRecord : stepRecord
                 });
+
             };
             gameStarted = false;
             setTimeout($("#target").sortedTiles(tileCount),1000);
@@ -214,7 +223,48 @@ function completionChecker(){
     }
 };
 
+function addCompleteImg() {
+    if (completedImg.indexOf($('#hiddenImg').attr('src')) == -1) {
+        completedImg.push($('#hiddenImg').attr('src'));
+        console.log(completedImg);
+        $('#nav-completed').text(" ");
 
+        for (var i = 0; i < completedImg.length; i++) {
+            var displayCompImg = $("<img class = 'completed' alt = 'completed images'>").attr('src', completedImg[i])
+            $('#nav-completed').append(displayCompImg);
+        }
+    }
+};
+
+$(document).on('click', '.completed', function() {
+    var modal = document.getElementById('myModal');
+    var img = document.getElementsByClassName('completed');
+    var modalImg = document.getElementById("img01");
+    img.onclick = function(){
+    modal.style.display = "block";
+    modalImg.src = this.src;
+    }
+});
+var span = document.getElementsByClassName("close")[0];
+span.onclick = function() { 
+    modal.style.display = "none";
+}
+
+
+database.ref("/stepRecord").on("value", function(snapshot){
+    if(snapshot.child("bestStepRecord").exists()){
+        stepRecord = snapshot.val().bestStepRecord;
+        $("#stepRecord").text(stepRecord);
+    }
+})
+
+database.ref("/timeRecord").on("value", function(snapshot){
+    if(snapshot.child("bestMinuteRecord").exists() && snapshot.child("bestSecondRecord").exists()){
+        minuteRecord = snapshot.val().bestMinuteRecord;
+        secondRecord = snapshot.val().bestSecondRecord;
+        $("#timeRecord").text(minuteRecord + " : " + secondRecord);
+    }
+});
 
 function timerSecond(){
     second ++;
@@ -234,7 +284,7 @@ function timerSecond(){
     };
 };
 
-$(document).on("click", ".difficulty", function(){
+$(document).on("click", ".difficulty", function(event){
     event.preventDefault();
     difficulty = $(this).text();
     stepRecordRef.on("value", function(snapshot){
@@ -256,7 +306,7 @@ $(document).on("click", ".difficulty", function(){
     return tileCount;
 });
 
-$(document).on("click", "#start", function(){
+$(document).on("click", "#start", function(event){
     event.preventDefault();
     if(tileCount != undefined && gameStarted === false){
         target.createGame(tileCount);
@@ -265,9 +315,11 @@ $(document).on("click", "#start", function(){
     }
 });
 
-$(document).on("click", "#restart", function(){
+$(document).on("click", "#restart", function(event){
     event.preventDefault();
+
     if(confirm("Are you sure?")){
+
         clearInterval(secondInterval);
         second = 0;
         minute = 0;
@@ -279,7 +331,7 @@ $(document).on("click", "#restart", function(){
     }
 });
 
-$(document).on("click", "#giveUp", function(){
+$(document).on("click", "#giveUp", function(event){
     event.preventDefault();
     clearInterval(secondInterval);
     database.ref("/lastRecordedTime").push({
@@ -292,9 +344,16 @@ $(document).on("click", "#giveUp", function(){
     $("#target").sortedTiles(tileCount);
     $(".btn").show();
     $(".delete").remove();
+  
+    second = 0;
+    minute = 0;
+    $("#second").text("0" + second);
+    $("#minute").text("0" + minute);
+    stepCount = initialStep;
+    stepsText.text(stepCount);
 });
 
-$(document).on("click", "#hint", function (){
+$(document).on("click", "#hint", function (event){
     event.preventDefault();
     if (gameStarted == true){
         if(numHint > 1){
