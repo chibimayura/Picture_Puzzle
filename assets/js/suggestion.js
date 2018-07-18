@@ -17,26 +17,18 @@ for (var j = 0; j < suggestedArray.length; j++) {
 
 $(document).on('click', '.thumbnail', function(event){
 	event.preventDefault();
-	imageSRC = $(this).attr("src");
-	$("#hiddenImg").attr("src", imageSRC);
-
-
-	clearInterval(secondInterval);
-	database.ref("/lastRecordedTime").push({
-	lastRecordedTime : minute + " : " + second
-	});
-	database.ref("/lastRecordedStep").push({
-	lastRecordedStep : stepCount
-	});
-	gameStarted = false;
-	$("#target").sortedTiles(tileCount);
-	$(".btn").show();
-	$(".delete").remove();
-
-	second = 0;
-	minute = 0;
-	$("#second").text("0" + second);
-	$("#minute").text("0" + minute);
-	stepCount = initialStep;
-	stepsText.text(stepCount);
+	if (gameStarted == false){
+		tileCount = 3;
+		imageSRC = $(this).attr("src");
+		$("#hiddenImg").attr("src", imageSRC);
+		$("#target").sortedTiles(tileCount);
+		$(".btn").show();
+		$(".delete").remove();
+		second = 0;
+		minute = 0;
+		$("#second").text("0" + second);
+		$("#minute").text("0" + minute);
+		stepCount = initialStep;
+		stepsText.text(stepCount);
+	}
 });
