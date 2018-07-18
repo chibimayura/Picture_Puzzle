@@ -53,11 +53,11 @@ $("form").on("click", "#searchGIF",function(event){
 });
 
 //When mouse enters and leaves the img in the generatedSearch
-$(document).on("mouseenter", "#gifContainer", function(){
+$(document).on("mouseenter", ".gifContainer", function(){
 	$(this).children("img").attr("src", $(this).children("img").attr("data-animate"));
 	$(this).children("div").fadeIn(1000);
 	$(this).children("img").css("opacity", "0.3");
-}).on("mouseleave", "#gifContainer", function(){
+}).on("mouseleave", ".gifContainer", function(){
 	$(this).children("img").attr("src", $(this).children("img").attr("data-still"));
 	$(this).children("div").fadeOut(10);
 	$(this).children("img").css("opacity", "1");
@@ -79,7 +79,7 @@ function generateGiphys(){
 		method: "GET"
 	}).then(function(response){
 		for(var i = 0; i < 3; i++){
-			newDiv = $("<div id='gifContainer'>");
+			newDiv = $("<div class='gifContainer'>");
 
 			//storing retrieved data response and randomizing which array in the data to get
 			randomGif = Math.floor(Math.random()*response.data.length);

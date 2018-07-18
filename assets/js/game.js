@@ -73,12 +73,16 @@ var stepRecord = 0;
 // var defaultPuzzle = $("<img id='hiddenImg' alt='hidden'>").attr("src", puzzleImage);
 // $("#msgBoard").append(defaultPuzzle);
 
+// stores completed images
+var completedImg = [];
+
 // text Selector for time and steps
 secondText.text("0" + second);
 minuteText.text("0" + minute);
 stepsText.text(stepCount);
 $("#hiddenImg").attr("src", imageSRC);
 $("#hiddenImg").hide();
+
 
 connectedRef.on("value", function(snap) {
     if (snap.val()) {
@@ -189,7 +193,8 @@ function completionChecker(){
         }
         if (correctTileCount == totalTiles){
             alert("Finally! That took you a while...");
-            clearInterval(secondInterval);            
+            clearInterval(secondInterval);
+            addCompleteImg();
             if (minute == minuteRecord && second < secondRecord){
                 timeRecordRef.child(difficulty).set({
                     bestSecondRecord : second,
@@ -206,11 +211,20 @@ function completionChecker(){
                 stepRecordRef.child(difficulty).set({
                     bestStepRecord : stepRecord
                 });
+
             };
             gameStarted = false;
             setTimeout($("#target").sortedTiles(tileCount),1000);
-            // $("#target").sortedTiles(tileCount);
         }
+    }
+};
+
+function addCompleteImg() {
+    if (completedImg.indexOf($('#hiddenImg').attr('src')) == -1) {
+        completedImg.push($('#hiddenImg').attr('src'));
+        $('#nav-completed-p').remove();
+            var displayCompImg = $("<img class = 'completed' alt = 'completed_images'>").attr('src', $('#hiddenImg').attr('src'))
+            $('#nav-completed').append(displayCompImg);
     }
 };
 
@@ -232,7 +246,7 @@ function timerSecond(){
     };
 };
 
-$(document).on("click", ".difficulty", function(){
+$(document).on("click", ".difficulty", function(event){
     event.preventDefault();
     difficulty = $(this).text();
     stepRecordRef.on("value", function(snapshot){
@@ -259,7 +273,7 @@ $(document).on("click", ".difficulty", function(){
     return tileCount;
 });
 
-$(document).on("click", "#start", function(){
+$(document).on("click", "#start", function(event){
     event.preventDefault();
     if(tileCount != undefined && gameStarted === false){
         target.createGame(tileCount);
@@ -268,7 +282,7 @@ $(document).on("click", "#start", function(){
     }
 });
 
-$(document).on("click", "#restart", function(){
+$(document).on("click", "#restart", function(event){
     event.preventDefault();
     if(confirm("Are you sure?")){
         clearInterval(secondInterval);
@@ -283,7 +297,7 @@ $(document).on("click", "#restart", function(){
     }
 });
 
-$(document).on("click", "#giveUp", function(){
+$(document).on("click", "#giveUp", function(event){
     event.preventDefault();
     clearInterval(secondInterval);
     database.ref("/lastRecordedTime").push({
@@ -304,7 +318,7 @@ $(document).on("click", "#giveUp", function(){
     $(".delete").remove();
 });
 
-$(document).on("click", "#hint", function (){
+$(document).on("click", "#hint", function (event){
     event.preventDefault();
     if (gameStarted == true){
         if(numHint > 1){
