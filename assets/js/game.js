@@ -272,9 +272,9 @@ $(document).on("click", "#restart", function(){
     event.preventDefault();
     if(confirm("Are you sure?")){
         clearInterval(secondInterval);
+        $(".delete").remove();
         second = 0;
         minute = 0;
-        $(".delete").remove();
         $("#second").text("0" + second);
         $("#minute").text("0" + minute);
         stepCount = initialStep;
@@ -293,6 +293,12 @@ $(document).on("click", "#giveUp", function(){
         lastRecordedStep : stepCount
     });
     gameStarted = false;
+    second = 0;
+    minute = 0;
+    $("#second").text("0" + second);
+    $("#minute").text("0" + minute);
+    stepCount = initialStep;
+    stepsText.text(stepCount);
     $("#target").sortedTiles(tileCount);
     $(".btn").show();
     $(".delete").remove();
