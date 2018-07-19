@@ -55,7 +55,8 @@ $(document).on('click', '.play', function(event){
     }
 });
 
-$(document).on('click', '.completed', function() {
+$(document).on('click', '.completed', function(event) {
+	event.preventDefault();
     // Get the modal
     var modal = document.querySelector('#containerForDisplay');
 
