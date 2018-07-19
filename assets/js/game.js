@@ -337,7 +337,7 @@ $(document).on("click", "#hint", function(event){
     }
 });
 
-$(document).on("click", "#nav-completed-tab", function(){
+$(document).on("click", "#nav-completed-tab", function(event){
     event.preventDefault();
     if(completedImg.length != 0){
         $("#nav-completed").empty();
