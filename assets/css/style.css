@@ -59,6 +59,10 @@
 	    margin: auto;
 	}
 
+	#giphyImgContainer {
+		display: none;
+	}
+
 	.btn{
 		font-size: 15px;
 	}
@@ -174,7 +178,7 @@
 	.modal-content {
 	    margin: auto;
 	    display: block;
-	    max-width: 600px;
+	    max-width: 500px;
 	}
 
 /* Download Button for Modal Image */
@@ -206,17 +210,17 @@
 /* The Close Button */
 	.close {
 	    position: absolute;
-	    top: 15px;
-	    right: 35px;
+	    top: 70px;
+	    right: 60px;
 	    color: #f1f1f1;
-	    font-size: 40px;
+	    font-size: 100px;
 	    font-weight: bold;
 	    transition: 0.3s;
 	}
 
 	.close:hover,
 	.close:focus {
-	    color: #bbb;
+	    color: #eee;
 	    text-decoration: none;
 	    cursor: pointer;
 	}
