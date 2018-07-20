@@ -3,7 +3,7 @@ var newOption, newTopic, stillGif, animateGif, newDiv, newImage, newImageOptions
 var searchRecomArray = ["Select a category...", "Animals", "Cars", "Food", "Technology", "Memes"];
 var currentTopic = searchRecomArray[0];
 
-var blackListGIFs = ["6o6TxEn995BTi", "HcxRu2lennQsM", "qyjQsUt0p0TT2"]
+var blackListGIFs = ["6o6TxEn995BTi", "HcxRu2lennQsM", "qyjQsUt0p0TT2", "LYMIzU2uLfpTi", "OG8jlh9Pkcpm8"]
 
 //Selects the area for the drop down option selector
 var optionSelector = $("#optionSelector");
