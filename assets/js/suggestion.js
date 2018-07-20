@@ -83,16 +83,7 @@ $(document).on('click', '.play', function(event){
     	difficulty = "Easy";
 
         imageSRC = $(this).parent().siblings().attr("data-still");
-        // grab the img info from the search - for later use when user completed the puzzle
-        var giphy = $(this).parent().siblings().attr({
-			"src" : stillGif,
-			"data-state" : "still",
-			"data-still" : stillGif,
-			"data-animate" : animateGif,
-			"class" : "completed",
-			"id" : "giphyImg"
-		});
-		$('#giphyImgContainer').append(giphy);
+        var imgDataAnimate = $(this).parent().siblings().attr("data-animate");
 
         stepRecordRef.on("value", function(snapshot){
             stepRecord = snapshot.val()[difficulty].bestStepRecord;
@@ -115,7 +106,12 @@ $(document).on('click', '.play', function(event){
         var newP = $("<p class='msg' id='difficulty'>").text("Difficulty Level - " + difficulty);
         $("#msgBoard").prepend(newP);
 
-        $("#hiddenImg").attr("src", imageSRC);
+        $("#hiddenImg").attr({
+            "src": imageSRC,
+            "data-state" : "still",
+			"data-still" : imageSRC,
+			"data-animate" : imgDataAnimate,
+        });
         $("#target").sortedTiles(tileCount);
         $(".btn").show();
         $(".delete").remove();
