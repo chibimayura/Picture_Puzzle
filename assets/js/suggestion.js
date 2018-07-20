@@ -21,8 +21,42 @@ for (var j = 0; j < suggestedArray.length; j++) {
 $(document).on('click', '.thumbnail', function(event){
     event.preventDefault();
     if (gameStarted == false){
-        tileCount = 3;
-        imageSRC = $(this).attr("src");
+    	imageSRC = $(this).attr("src");
+    	if (imageSRC.indexOf('numbers_16') > -1) {
+    		tileCount = 4;
+    		difficulty = "Medium";
+    	}else if (imageSRC.indexOf('numbers_25') > -1) {
+    		tileCount = 5;
+    		difficulty = "Hard";
+    	}else if (imageSRC.indexOf('numbers_36') > -1) {
+    		tileCount = 6;
+    		difficulty = "Insane";
+    	}else {
+    		tileCount = 3;
+    		difficulty = "Easy";
+    	}
+
+    	stepRecordRef.on("value", function(snapshot){
+    	    stepRecord = snapshot.val()[difficulty].bestStepRecord;
+    	    $("#stepRecord").text(stepRecord);
+    	})
+    	
+    	timeRecordRef.on("value", function(snapshot){
+    	    minuteRecord = snapshot.val()[difficulty].bestMinuteRecord;
+    	    secondRecord = snapshot.val()[difficulty].bestSecondRecord;
+    	    if(minuteRecord < 10 && secondRecord < 10){
+    	        $("#timeRecord").text("0" + minuteRecord + " : 0" + secondRecord);
+    	    }else if (minuteRecord >= 10 && secondRecord < 10){
+    	        $("#timeRecord").text(minuteRecord + " : 0" + secondRecord);
+    	    }else{
+    	        $("#timeRecord").text(minuteRecord + " : " + secondRecord);
+    	    };
+    	});
+
+    	$("#difficulty").remove();
+    	var newP = $("<p class='msg' id='difficulty'>").text("Difficulty Level - " + difficulty);
+    	$("#msgBoard").prepend(newP);
+
         $("#hiddenImg").attr("src", imageSRC);
         $("#target").sortedTiles(tileCount);
         $(".btn").show();
@@ -40,8 +74,31 @@ $(document).on('click', '.play', function(event){
     event.preventDefault();
     if (gameStarted == false){
         tileCount = 3;
+    	difficulty = "Easy";
         imageSRC = $(this).parent().siblings().attr("data-still");
         console.log(imageSRC);
+
+        stepRecordRef.on("value", function(snapshot){
+            stepRecord = snapshot.val()[difficulty].bestStepRecord;
+            $("#stepRecord").text(stepRecord);
+        })
+        
+        timeRecordRef.on("value", function(snapshot){
+            minuteRecord = snapshot.val()[difficulty].bestMinuteRecord;
+            secondRecord = snapshot.val()[difficulty].bestSecondRecord;
+            if(minuteRecord < 10 && secondRecord < 10){
+                $("#timeRecord").text("0" + minuteRecord + " : 0" + secondRecord);
+            }else if (minuteRecord >= 10 && secondRecord < 10){
+                $("#timeRecord").text(minuteRecord + " : 0" + secondRecord);
+            }else{
+                $("#timeRecord").text(minuteRecord + " : " + secondRecord);
+            };
+        });
+
+        $("#difficulty").remove();
+        var newP = $("<p class='msg' id='difficulty'>").text("Difficulty Level - " + difficulty);
+        $("#msgBoard").prepend(newP);
+
         $("#hiddenImg").attr("src", imageSRC);
         $("#target").sortedTiles(tileCount);
         $(".btn").show();
@@ -58,14 +115,14 @@ $(document).on('click', '.play', function(event){
 $(document).on('click', '.completed', function(event) {
 	event.preventDefault();
     // Get the modal
-    var modal = document.querySelector('#containerForDisplay');
+    // var modal = document.querySelector('#containerForDisplay');
 
     // Get the image and insert it inside the modal 
-    var img = document.querySelector('.completed');
-    var modalImg = document.querySelector("#displayFullSize");
+    // var img = document.querySelector('.completed');
+    // var modalImg = document.querySelector("#displayFullSize");
    
-    modal.style.display = "block";
-    modalImg.src = this.src;
+    $('#containerForDisplay').show();
+    $('#displayFullSize').attr('src', $(this).attr('src'));
 
     $('#download').empty();
     var download = $("<a download target='_blank'>").attr('href', $(this).attr('src'));
@@ -73,11 +130,15 @@ $(document).on('click', '.completed', function(event) {
     download.append(downloadButton);
     $('#download').append(download);
     
-    // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("close")[0];
+    // // Get the <span> element that closes the modal
+    // var span = document.getElementsByClassName("close")[0];
 
-    // When the user clicks on <span> (x), close the modal
-    span.onclick = function() { 
-        modal.style.display = "none";
-    }
+    // // When the user clicks on <span> (x), close the modal
+    // span.onclick = function() { 
+    //     modal.style.display = "none";
+    // }
+});
+
+$(document).on('click', '.close', function() {
+	$('.modal').hide();
 });
