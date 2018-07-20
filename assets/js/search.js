@@ -1,9 +1,9 @@
-var newOption, newTopic, stillGif, animateGif, newDiv, newImage, newImageOptions, saveBtn, playGifPuzzleBtn, gifWidth, gifHeight;
+var newOption, newTopic, stillGif, animateGif, newDiv, newImage, newImageOptions, saveBtn, playGifPuzzleBtn, gifWidth, gifHeight, gifID;
 
 var searchRecomArray = ["Select a category...", "Animals", "Cars", "Food", "Technology", "Memes"];
 var currentTopic = searchRecomArray[0];
 
-var blackListGIFs = ["https://media1.giphy.com/media/6o6TxEn995BTi/giphy_s.gif", "https://media3.giphy.com/media/HcxRu2lennQsM/giphy_s.gif", "https://media1.giphy.com/media/qyjQsUt0p0TT2/giphy_s.gif"]
+var blackListGIFs = ["6o6TxEn995BTi", "HcxRu2lennQsM", "qyjQsUt0p0TT2"]
 
 //Selects the area for the drop down option selector
 var optionSelector = $("#optionSelector");
@@ -90,6 +90,7 @@ function generateGiphys(){
 
 			//storing retrieved data response and randomizing which array in the data to get
 			randomGif = Math.floor(Math.random()*response.data.length);
+			gifID = response.data[randomGif].id;
 			stillGif = response.data[randomGif].images.original_still.url;
 			animateGif = response.data[randomGif].images.original.url;
 			gifStillWidth = response.data[randomGif].images.original_still.width;
@@ -97,7 +98,7 @@ function generateGiphys(){
 			gifWidth = response.data[randomGif].images.original.width;
 			gifHeight = response.data[randomGif].images.original.height;
 
-			if (gifWidth >= "500" && gifHeight >= "500" && gifStillWidth >= "500" && gifStillHeight >= "500" && blackListGIFs.indexOf(stillGif) == -1 && blackListGIFs.indexOf(animateGif) == -1){
+			if (gifWidth >= "500" && gifHeight >= "500" && gifStillWidth >= "500" && gifStillHeight >= "500" && blackListGIFs.indexOf(gifID) == -1){
 				//all of the image attr
 				newImage = $("<img>").attr({
 					"src" : stillGif,
