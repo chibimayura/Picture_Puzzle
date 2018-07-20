@@ -175,7 +175,7 @@ function Move(clicked_square, tileWidth, tileHeight){
         $(clicked_square).animate({ left: oldx, top: oldy }, 200, function(){
             $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("left", newx);
             $("#board").children("div:nth-child(" + randomEmptyTile + ")").css("top", newy);
-            setTimeout(completionChecker, 100);
+            setTimeout(completionChecker, 50);
         });
         stepCount ++;
         $("#steps").text(stepCount);
@@ -191,6 +191,7 @@ function completionChecker(){
         if (correctTileCount == totalTiles){
             alert("Finally! That took you a while...");
             clearInterval(secondInterval);
+            $('.sidebar').show("slide", { direction: "left" }, 1000);
             addCompleteImg();
             if (minute == minuteRecord && second < secondRecord){
                 timeRecordRef.child(difficulty).set({
