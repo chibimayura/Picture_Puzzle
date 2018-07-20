@@ -71,6 +71,9 @@ var stepRecord = 0;
 // stores completed images
 var completedImg = [];
 
+// Complete image of current puzzle
+var displayCompImg;
+
 // text Selector for time and steps
 secondText.text("0" + second);
 minuteText.text("0" + minute);
@@ -211,29 +214,32 @@ function completionChecker(){
                 });
             };
             gameStarted = false;
-            setTimeout($("#target").sortedTiles(tileCount),1000);
+            // setTimeout($("#target").sortedTiles(tileCount),1000);
         }
     };
 };
 
 function addCompleteImg(){
-    if (completedImg.indexOf($('#hiddenImg').attr('src')) == -1) {
-        // if its a giphy, grab the animated link from #giphyImg
-        if ($('#hiddenImg').attr('src').indexOf('gif') > -1) {
-            completedImg.push($('#giphyImg').attr('data-animate'));
-            var displayCompImg = $("<img class='completed' alt='completed_images'>").attr('src', $('#giphyImg').attr('data-animate'));
-        // if its local, grab from #hiddenImg
-        }else {
-            completedImg.push($('#hiddenImg').attr('src'));
-            var displayCompImg = $("<img class='completed' alt='completed_images'>").attr('src', $('#hiddenImg').attr('src'));
+    if ($('#hiddenImg').attr('src').indexOf('gif') != -1){
+        displayCompImg = $("<img class='completed' alt='completed_images'>").attr('src', $('#hiddenImg').attr('data-animate'));
+        if (completedImg.indexOf($('#hiddenImg').attr('data-animate')) == -1){
+            completedImg.push($('#hiddenImg').attr('data-animate'));
         }
+    }else {
+        displayCompImg = $("<img class='completed' alt='completed_images'>").attr('src', $('#hiddenImg').attr('src'));
+        if (completedImg.indexOf($('#hiddenImg').attr('src')) == -1){
+            completedImg.push($('#hiddenImg').attr('src'));
+        }
+    }
 
-        localStorage.setItem("completedImgArr", JSON.stringify(completedImg));
-        completedImg = JSON.parse(localStorage.getItem("completedImgArr"));
+    localStorage.setItem("completedImgArr", JSON.stringify(completedImg));
+    completedImg = JSON.parse(localStorage.getItem("completedImgArr"));
 
-        $('#nav-completed-p').remove();
-        $('#nav-completed').append(displayCompImg);
-    };
+    $('#nav-completed-p').remove();
+    $('#nav-completed').append(displayCompImg);
+    
+    $("#board").remove();
+    $("#target").append(displayCompImg);
 };
 
 function timerSecond(){
