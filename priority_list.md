@@ -18,3 +18,4 @@ Allow completed puzzles (firebase)
 Allow one-click download
 Tile moving sound effect
 Firebase Auth
+Save
