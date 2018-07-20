@@ -106,7 +106,7 @@ $.fn.extend({ sortedTiles:function(pieces){
     }
     randomEmptyTile = Math.ceil(Math.random() * totalTiles);
     $(targetElement).html("<div id = 'board'></div>");
-    $("#board").css({ position:'relative', width: imgWidth, height: imgHeight});
+    $("#board").css({ position:'absolute', width: imgWidth, height: imgHeight});
         for (var i = 0; i < totalTiles; i++){
             $("#board").append("<div data-sequence = " + tileSequence[i] + " style = 'position: absolute; left: " + ((i % tileCount) * tileWidth) + "px; top: " + Math.floor(i / tileCount) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; background: #ffffff url(" + imageSRC + ") " + (-(tileSequence[i] % tileCount) * tileWidth) + "px " + -Math.floor(tileSequence[i] / tileCount) * tileHeight + "px no-repeat !important'></div>");
         }
@@ -135,7 +135,7 @@ $.fn.extend({ createGame:function(pieces){
     }
     randomEmptyTile = Math.ceil(Math.random() * totalTiles);
     $(targetElement).html("<div id = 'board'></div>");
-    $("#board").css({ position:'relative', width: imgWidth, height: imgHeight});
+    $("#board").css({ position:'absolute', width: imgWidth, height: imgHeight});
         tileSequence.sort(function(a, b){return 0.5 - Math.random()});
         for (var i = 0; i < totalTiles; i++){
             $("#board").append("<div class='tiles' data-sequence = " + tileSequence[i].tileNumber + " positionleft = " + tileSequence[i].left + " positiontop = " + tileSequence[i].top  + "  style = 'position: absolute; left: " + ((i % tileCount) * tileWidth) + "px; top: " + Math.floor(i / tileCount) * tileHeight + "px; width: " + tileWidth + "px; height: " + tileHeight + "px; text-align: center; line-height: " + tileHeight + "px; background: #ffffff url(" + imageSRC + ") " + (-(tileSequence[i].tileNumber % tileCount) * tileWidth) + "px " + -Math.floor(tileSequence[i].tileNumber / tileCount) * tileHeight + "px no-repeat !important'></div>");
@@ -252,7 +252,7 @@ $(document).on("click", ".difficulty", function(event){
     stepRecordRef.on("value", function(snapshot){
         stepRecord = snapshot.val()[difficulty].bestStepRecord;
         $("#stepRecord").text(stepRecord);
-    })
+    });
     
     timeRecordRef.on("value", function(snapshot){
         minuteRecord = snapshot.val()[difficulty].bestMinuteRecord;
@@ -279,7 +279,7 @@ $(document).on("click", "#start", function(event){
         target.createGame(tileCount);
     }else if(tileCount == undefined){
         alert("Select a difficulty!!!");
-    }
+    };
 });
 
 $(document).on("click", "#restart", function(event){
@@ -294,7 +294,7 @@ $(document).on("click", "#restart", function(event){
         stepCount = initialStep;
         stepsText.text(stepCount);
         target.createGame(tileCount);
-    }
+    };
 });
 
 $(document).on("click", "#giveUp", function(event){
@@ -333,8 +333,8 @@ $(document).on("click", "#hint", function(event){
             $("#hint").text(numHint + " hint");
         }else{
             alert("Show me your money");
-        }
-    }
+        };
+    };
 });
 
 $(document).on("click", "#nav-completed-tab", function(event){
