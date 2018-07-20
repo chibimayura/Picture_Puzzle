@@ -284,7 +284,7 @@ $(document).on("click", "#start", function(event){
     event.preventDefault();
     if(tileCount != undefined && gameStarted === false){
         target.createGame(tileCount);
-        $('.sidebar').fadeOut(2000);
+        $('.sidebar').hide("slide", { direction: "left" }, 1000);
     }else if(tileCount == undefined){
         alert("Select a difficulty!!!");
     };
@@ -324,7 +324,7 @@ $(document).on("click", "#giveUp", function(event){
     $("#target").sortedTiles(tileCount);
     $(".btn").show();
     $(".delete").remove();
-    $('.sidebar').fadeIn(2000);
+    $('.sidebar').show("slide", { direction: "left" }, 1000);
 });
 
 $(document).on("click", "#hint", function(event){
