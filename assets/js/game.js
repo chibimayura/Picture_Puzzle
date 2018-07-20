@@ -217,14 +217,21 @@ function completionChecker(){
 
 function addCompleteImg(){
     if (completedImg.indexOf($('#hiddenImg').attr('src')) == -1) {
-        completedImg.push($('#hiddenImg').attr('src'));
+        // if its a giphy, grab the animated link from #giphyImg
+        if ($('#hiddenImg').attr('src').indexOf('gif') > -1) {
+            completedImg.push($('#giphyImg').attr('data-animate'));
+            var displayCompImg = $("<img class='completed' alt='completed_images'>").attr('src', $('#giphyImg').attr('data-animate'));
+        // if its local, grab from #hiddenImg
+        }else {
+            completedImg.push($('#hiddenImg').attr('src'));
+            var displayCompImg = $("<img class='completed' alt='completed_images'>").attr('src', $('#hiddenImg').attr('src'));
+        }
+
         localStorage.setItem("completedImgArr", JSON.stringify(completedImg));
         completedImg = JSON.parse(localStorage.getItem("completedImgArr"));
+
         $('#nav-completed-p').remove();
-        for (var i=0; i < completedImg.length; i++){
-            var displayCompImg = $("<img class='completed' alt='completed_images'>").attr('src', $('#hiddenImg').attr('src'));
-            $('#nav-completed').append(displayCompImg);
-        }
+        $('#nav-completed').append(displayCompImg);
     };
 };
 
@@ -277,6 +284,7 @@ $(document).on("click", "#start", function(event){
     event.preventDefault();
     if(tileCount != undefined && gameStarted === false){
         target.createGame(tileCount);
+        $('.sidebar').fadeOut(2000);
     }else if(tileCount == undefined){
         alert("Select a difficulty!!!");
     };
@@ -316,6 +324,7 @@ $(document).on("click", "#giveUp", function(event){
     $("#target").sortedTiles(tileCount);
     $(".btn").show();
     $(".delete").remove();
+    $('.sidebar').fadeIn(2000);
 });
 
 $(document).on("click", "#hint", function(event){

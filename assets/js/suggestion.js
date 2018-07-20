@@ -4,11 +4,17 @@ var suggestedArray =
    "../Picture_Puzzle/assets/images/numbers_16_pieces.jpg",
    "../Picture_Puzzle/assets/images/numbers_25_pieces.jpg",
    "../Picture_Puzzle/assets/images/numbers_36_pieces.jpg",
+   "../Picture_Puzzle/assets/images/spring.jpg",
+   "../Picture_Puzzle/assets/images/summer.jpg",
+   "../Picture_Puzzle/assets/images/Fall_700x400.jpg",
+   "../Picture_Puzzle/assets/images/Winter.jpg",
+   "../Picture_Puzzle/assets/images/daisies.jpg",
+   "../Picture_Puzzle/assets/images/summerseason1.jpg",
+   "../Picture_Puzzle/assets/images/beach.jpg",
    "../Picture_Puzzle/assets/images/Pembroke-Welsh-Corgi-MP.jpg",
-   "../Picture_Puzzle/assets/images/img_1000x600.jpg",
+   "../Picture_Puzzle/assets/images/img_800x480.jpg",
    "../Picture_Puzzle/assets/images/img_800x600.jpg",
    "../Picture_Puzzle/assets/images/earth_img_600x600.jpg",
-   "../Picture_Puzzle/assets/images/sunrise.JPG",
    "../Picture_Puzzle/assets/images/sunset.jpg",
    "../Picture_Puzzle/assets/images/gradient-pixel-background.jpg"
    ]
@@ -75,8 +81,18 @@ $(document).on('click', '.play', function(event){
     if (gameStarted == false){
         tileCount = 3;
     	difficulty = "Easy";
+
         imageSRC = $(this).parent().siblings().attr("data-still");
-        console.log(imageSRC);
+        // grab the img info from the search - for later use when user completed the puzzle
+        var giphy = $(this).parent().siblings().attr({
+			"src" : stillGif,
+			"data-state" : "still",
+			"data-still" : stillGif,
+			"data-animate" : animateGif,
+			"class" : "completed",
+			"id" : "giphyImg"
+		});
+		$('#giphyImgContainer').append(giphy);
 
         stepRecordRef.on("value", function(snapshot){
             stepRecord = snapshot.val()[difficulty].bestStepRecord;
@@ -114,29 +130,23 @@ $(document).on('click', '.play', function(event){
 
 $(document).on('click', '.completed', function(event) {
 	event.preventDefault();
-    // Get the modal
-    // var modal = document.querySelector('#containerForDisplay');
 
-    // Get the image and insert it inside the modal 
-    // var img = document.querySelector('.completed');
-    // var modalImg = document.querySelector("#displayFullSize");
-   
     $('#containerForDisplay').show();
     $('#displayFullSize').attr('src', $(this).attr('src'));
 
     $('#download').empty();
     var download = $("<a download target='_blank'>").attr('href', $(this).attr('src'));
-    var downloadButton = $('<button>').text('Download Image');
-    download.append(downloadButton);
-    $('#download').append(download);
-    
-    // // Get the <span> element that closes the modal
-    // var span = document.getElementsByClassName("close")[0];
 
-    // // When the user clicks on <span> (x), close the modal
-    // span.onclick = function() { 
-    //     modal.style.display = "none";
-    // }
+    if (download.attr('href').indexOf('giphy') == -1) {
+    	var downloadButton = $('<button>').text('Download Image');
+    	download.append(downloadButton);
+    	$('#download').append(download);
+    }else {
+    	var downloadButton = $('<button>').text('View image in a new tab');
+    	download.append(downloadButton);
+    	$('#download').append(download);
+    }
+    
 });
 
 $(document).on('click', '.close', function() {
