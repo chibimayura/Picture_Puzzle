@@ -50,13 +50,12 @@
 /*game related style*/
 	#hiddenImg {
 		display: none;
-	    position: absolute;
-	    z-index: 2;
-
-	    left: 10%;
+		position: absolute;
+		right: 0;
+		left: 10%;
+		z-index: 2;
 	    width: auto;
 	    height: auto;
-	    right: 0;
 	    margin: auto;
 	}
 
@@ -92,8 +91,8 @@
 	}
 
 	#board {
-		left: auto;
-		right: auto;
+		right: 0;
+		left: 10%;
 		margin: auto;
 		margin-bottom: 50px;
 	}
@@ -122,10 +121,10 @@
 
 	.gifBtn {
 		position: relative;
-		left: 75%;
-		right: 75%;
+		left: 50%;
+		right: 50%;
 		margin-top: -100%;
-		margin-bottom: 100%;
+		margin-bottom: auto;
 	}
 
 /*save bar style*/
@@ -226,5 +225,6 @@
 	@media only screen and (max-width: 700px){
 	    .modal-content {
 	        width: 100%;
-	    }
+		}
+	}
 /* End of Modal Styling */
