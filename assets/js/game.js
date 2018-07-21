@@ -17,6 +17,29 @@ var playerDataRef = database.ref("/playerData");
 var timeRecordRef = database.ref("/timeRecord");
 var stepRecordRef = database.ref("/stepRecord");
 
+// FirebaseUI config.
+var uiConfig = {
+signInSuccessUrl: '<index.html>',
+signInOptions: [
+    // Leave the lines as is for the providers you want to offer your users.
+    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+    firebase.auth.EmailAuthProvider.PROVIDER_ID,    
+],
+// // Terms of service url.
+// tosUrl: '<#>'
+};
+
+// Initialize the FirebaseUI Widget using Firebase.
+var ui = new firebaseui.auth.AuthUI(firebase.auth());
+
+// To check if there is a pending redirect operation to complete a sign-in attempt
+// if (ui.isPendingRedirect()) {
+//     ui.start('#firebaseui-auth-container', uiConfig);
+// };
+
+// The start method will wait until the DOM is loaded.
+ui.start('#firebaseui-auth-container', uiConfig);
+
 // html selectors
 var puzzleBoard = $("#board");
 var target = $("#target");
