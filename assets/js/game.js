@@ -26,6 +26,9 @@ var stepsText = $("#steps");
 var hiddenImage = $("#hiddenImg");
 var imageSRC = "../Picture_Puzzle/assets/images/earth_img_600x600.jpg";
 
+// Grabs data-animate of $(#hiddenImg)
+var gifDataAnimate;
+
 // stores width and height of tiles
 var tileWidth, tileHeight;
 // stores tileCount per row and column
@@ -78,7 +81,10 @@ var displayCompImg;
 secondText.text("0" + second);
 minuteText.text("0" + minute);
 stepsText.text(stepCount);
-$("#hiddenImg").attr("src", imageSRC);
+$("#hiddenImg").attr({
+    "src": imageSRC,
+    "data-status": "still"
+});
 $("#hiddenImg").hide();
 if (localStorage.getItem("completedImgArr") != null){
     completedImg = JSON.parse(localStorage.getItem("completedImgArr"));
@@ -239,8 +245,12 @@ function addCompleteImg(){
     $('#nav-completed-p').remove();
     $('#nav-completed').append(displayCompImg);
     
-    $("#board").empty();
-    $("#board").append(displayCompImg);
+    gifDataAnimate = $("#hiddenImg").attr("data-animate");
+    $("#hiddenImg").attr({
+        "data-status": "animate",
+        "src": gifDataAnimate
+    })
+    $("#hiddenImg").fadeIn(1000);
 };
 
 function timerSecond(){
