@@ -239,8 +239,8 @@ function addCompleteImg(){
     $('#nav-completed-p').remove();
     $('#nav-completed').append(displayCompImg);
     
-    $("#board").remove();
-    $("#target").append(displayCompImg);
+    $("#board").empty();
+    $("#board").append(displayCompImg);
 };
 
 function timerSecond(){
