@@ -32,8 +32,10 @@
                         <input type="text" name="enterTagToSearch" placeholder="Enter a category to search...">
                         <select id="optionSelector">
                         </select>
-                        <button class="btn btn-dark position-relative float-right mr-3" id="searchGIF">Submit</button>
-                        <button class="btn btn-dark position-relative float-left mr-3" id="refresh">Refresh &#8635;</button>
+                        <div id="submitAndRefresh">
+                            <button class="btn btn-dark position-relative float-right mr-3" id="searchGIF">Submit</button>
+                            <button class="btn btn-dark position-relative float-left mr-3" id="refresh">Refresh &#8635;</button>
+                        </div>
                     </form>
                     <div id="generatedSearch">
                         <!-- insert 3 random gifs from giphy api -->

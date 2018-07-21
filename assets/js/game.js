@@ -229,12 +229,12 @@ function completionChecker(){
 function addCompleteImg(){
     if ($('#hiddenImg').attr('src').indexOf('gif') != -1){
         displayCompImg = $("<img class='completed' alt='completed_images'>").attr('src', $('#hiddenImg').attr('data-animate'));
-        if (completedImg.indexOf($('#hiddenImg').attr('data-animate')) == -1){
+        if (localStorage.completedImgArr.indexOf($("#hiddenImg").attr("data-id")) == -1){
             completedImg.push($('#hiddenImg').attr('data-animate'));
         }
     }else {
         displayCompImg = $("<img class='completed' alt='completed_images'>").attr('src', $('#hiddenImg').attr('src'));
-        if (completedImg.indexOf($('#hiddenImg').attr('src')) == -1){
+        if (localStorage.completedImgArr.indexOf($('#hiddenImg').attr('src')) == -1){
             completedImg.push($('#hiddenImg').attr('src'));
         }
     }
@@ -304,6 +304,7 @@ $(document).on("click", ".difficulty", function(event){
 
 $(document).on("click", "#start", function(event){
     event.preventDefault();
+    $("#hiddenImg").hide();
     if(tileCount != undefined && gameStarted === false){
         target.createGame(tileCount);
         $('.sidebar').hide("slide", { direction: "left" }, 1000);
@@ -315,6 +316,7 @@ $(document).on("click", "#start", function(event){
 $(document).on("click", "#restart", function(event){
     event.preventDefault();
     if(confirm("Are you sure?")){
+        $("#hiddenImg").hide();
         clearInterval(secondInterval);
         $(".delete").remove();
         second = 0;

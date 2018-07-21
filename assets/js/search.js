@@ -105,6 +105,7 @@ function generateGiphys(){
 					"data-state" : "still",
 					"data-still" : stillGif,
 					"data-animate" : animateGif,
+					"data-id" : gifID,
 					"class" : "gif"
 				});
 

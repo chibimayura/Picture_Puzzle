@@ -14,7 +14,7 @@
 		top: 0;
 		left: 0;
 		height: 100%;
-		width: 300px;
+		width: 22%;
 		z-index: 1;
 		overflow-x: hidden;
 		float: left;
@@ -109,6 +109,10 @@
 		width: 95%;
 		margin-bottom: 5px;
 	}	
+
+	#submitAndRefresh{
+		width: 100%;
+	}
 
 	#generatedSearch img, #savedSearch img, #suggestedPuzzle img {
 		position: relative;

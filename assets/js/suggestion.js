@@ -84,6 +84,7 @@ $(document).on('click', '.play', function(event){
 
         imageSRC = $(this).parent().siblings().attr("data-still");
         var imgDataAnimate = $(this).parent().siblings().attr("data-animate");
+        var imageID = $(this).parent().siblings().attr("data-id");
         $(this).parent().parent().hide();
 
         stepRecordRef.on("value", function(snapshot){
@@ -111,7 +112,8 @@ $(document).on('click', '.play', function(event){
             "src": imageSRC,
             "data-state" : "still",
 			"data-still" : imageSRC,
-			"data-animate" : imgDataAnimate,
+            "data-animate" : imgDataAnimate,
+            "data-id" : imageID,
         });
         $("#target").sortedTiles(tileCount);
         $(".btn").show();
