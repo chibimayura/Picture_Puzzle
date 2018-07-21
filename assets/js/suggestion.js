@@ -84,6 +84,7 @@ $(document).on('click', '.play', function(event){
 
         imageSRC = $(this).parent().siblings().attr("data-still");
         var imgDataAnimate = $(this).parent().siblings().attr("data-animate");
+        $(this).parent().parent().hide();
 
         stepRecordRef.on("value", function(snapshot){
             stepRecord = snapshot.val()[difficulty].bestStepRecord;
