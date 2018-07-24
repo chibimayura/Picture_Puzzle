@@ -1,0 +1,124 @@
+<!DOCTYPE>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>GIF Puzzle - jQuery Plugin</title>
+    <!-- resets css style -->
+    <link rel="stylesheet" href="../Picture_Puzzle/assets/css/reset.css">
+    <!-- bootstrap css styling -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <!-- custom css -->
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- sidebar to allow users to search, store and look at recommended puzzles -->
+        <div class="sidebar">
+            <!-- navigation for tabs -->
+            <nav class="ml-2 my-2">
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link active" id="nav-search-tab" data-toggle="tab" href="#nav-search" role="tab" aria-controls="nav-search" aria-selected="true">Search</a>
+                <a class="nav-item nav-link" id="nav-saved-tab" data-toggle="tab" href="#nav-saved" role="tab" aria-controls="nav-saved" aria-selected="false">Saved</a>
+                <a class="nav-item nav-link" id="nav-suggestion-tab" data-toggle="tab" href="#nav-suggestion" role="tab" aria-controls="nav-suggestion" aria-selected="false">Suggestion</a>
+            </div>
+            </nav>
+
+            <!-- content inside tabs -->
+            <div class="tab-content" id="nav-tabContent">
+                <div class="pl-2 tab-pane fade show active" id="nav-search" role="tabpanel" aria-labelledby="nav-search-tab">
+                    <form>
+                        <input type="text" name="enterTagToSearch" placeholder="Enter a category to search...">
+                        <select id="optionSelector">
+                        </select>
+                        <div id="submitAndRefresh">
+                            <button class="btn btn-dark position-relative float-right mr-3" id="searchGIF">Submit</button>
+                            <button class="btn btn-dark position-relative float-left mr-3" id="refresh">Refresh &#8635;</button>
+                        </div>
+                    </form>
+                    <div id="generatedSearch">
+                        <!-- insert 3 random gifs from giphy api -->
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="nav-saved" role="tabpanel" aria-labelledby="nav-saved-tab">
+                    <h3>Saved Gifs</h3>
+                    <p>Save items will be removed after playing</p>
+                    <div id="savedSearch">
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="nav-suggestion" role="tabpanel" aria-labelledby="nav-suggestion-tab">
+                    Recommended puzzles to play
+                </div>
+            </div>
+        </div>
+
+        <!-- game area centered to the rest of the page -->
+        <div class="game text-center m-auto">
+            <!-- navigation for tabs -->
+            <nav class="my-2">
+            <div class="nav justify-content-center nav-tabs" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link active" id="nav-game-tab" data-toggle="tab" href="#nav-game" role="tab" aria-controls="nav-game" aria-selected="true">Puzzle</a>
+                <a class="nav-item nav-link" id="nav-completed-tab" data-toggle="tab" href="#nav-completed" role="tab" aria-controls="nav-completed" aria-selected="false">Completed</a>
+                <a class="nav-item nav-link" id="nav-ranking-tab" data-toggle="tab" href="#nav-ranking" role="tab" aria-controls="nav-ranking" aria-selected="false">Ranking</a>
+            </div>
+            </nav>
+
+            <!-- content inside tabs -->
+            <div class="tab-content" id="nav-tabContent">
+                <!-- Log In Area -->
+                <div id="firebaseui-auth-container">
+                </div>                
+                <!-- Game Content -->
+                <div class="tab-pane fade show active" id="nav-game" role="tabpanel" aria-labelledby="nav-game-tab">
+                    <form id='btns'>
+                        <button class="difficulty btn btn-primary" data-tileCount="3">Easy</button>
+                        <button class="difficulty btn btn-primary" data-tileCount="4">Medium</button>
+                        <button class="difficulty btn btn-primary" data-tileCount="5">Hard</button>
+                        <button class="difficulty btn btn-primary" data-tileCount="6">Insane</button>
+                        <button class="btn btn-primary" id="start">Start</button>
+                    </form>
+                    <div id='msgBoard'>
+                        <p class='msg'><span id='numPlayers'></span> people currently playing</p>
+                        <p class='msg'>Step Record of this level: <span id='stepRecord'></span> steps</p>
+                        <p class='msg'>Time Record of this level: <span id='timeRecord'></span></p>
+                        <p class='msg'>Steps: <span id='steps'></span></p>
+                        <p class='msg'>Time: <span id="minute"></span> : <span id="second"></span></p>
+                    </div>
+                    <img src="assets/images/img_800x480.jpg" alt="hidden" id="hiddenImg" class="m-auto">
+                    <div id="giphyImgContainer" class="m-auto"></div>
+                    <div id="target"></div>
+                </div>
+
+                <div class="tab-pane fade" id="nav-completed" role="tabpanel" aria-labelledby="nav-completed-tab">
+                    <p id="nav-completed-p">You haven't completed any games yet</p>
+                </div>
+                <!-- The Modal -->
+                <div id="containerForDisplay" class="modal">
+                  <span class="close">&times;</span>
+                  <img class="modal-content" id="displayFullSize">
+                  <div id="download"></div>
+                </div>
+                <div class="tab-pane fade" id="nav-ranking" role="tabpanel" aria-labelledby="nav-ranking-tab">
+                    Ranking display
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <audio src="../Picture_Puzzle/assets/sounds/click.wav" id="soundEffect"></audio>
+
+    <script src="https://www.gstatic.com/firebasejs/5.3.0/firebase.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="assets/js/search.js"></script>
+    <script src="assets/js/suggestion.js"></script>
+    <script src="assets/js/game.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
+    
+</body>
+</html>

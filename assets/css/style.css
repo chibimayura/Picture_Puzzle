@@ -1,0 +1,238 @@
+/*overall page style*/
+	html, body{
+		height: 100%;
+	}
+	body {
+		background: url("../images/tile-bg.png");
+		color: #fff;
+		background-color: #242424;
+	}
+
+	.sidebar {
+		background-color: #1c474a;
+		position: fixed;
+		top: 0;
+		left: 0;
+		height: 100%;
+		width: 22%;
+		z-index: 1;
+		overflow-x: hidden;
+		float: left;
+	}
+
+	.sidebar a, .game a{
+		font-size: 15px;
+		background-color: #282828;
+		color: #fff;
+	}
+
+	.game a {
+		width: 20%;
+		text-align: center;
+	}
+
+	.game {
+		margin-left: 130px !important;
+		margin: auto;
+		position: inherit !important;
+		height: 100%;
+		text-align: center;
+	}
+
+	.nav-tabs {
+		border-color: #242424;
+	}
+
+	#nav-tab a{
+		padding: 10px !important;
+	}
+
+/*game related style*/
+	#hiddenImg {
+		display: none;
+		position: absolute;
+		right: 0;
+		left: 10%;
+		z-index: 2;
+	    width: auto;
+	    height: auto;
+	    margin: auto;
+	}
+
+	#giphyImgContainer {
+		display: none;
+	}
+
+	.btn{
+		font-size: 15px;
+	}
+
+	.btn-primary {
+	    padding: 10px 18px;
+	    font-size: 15px;
+	    font-weight: bolder;
+	    border-radius: 5px;
+	    background-color: #00747d;
+	    border-color: #00747d;
+	    color: #fff;
+	    cursor: pointer;
+	}
+
+	.btn-primary:hover {
+		background-color: #00a7b3 !important;
+	}
+
+	.newButtonSpacing {
+		margin-left: 5px !important;
+	}
+
+	.tiles {
+	    cursor: -webkit-grab;
+	    cursor: grab;
+	}
+
+	#board div{
+		-moz-box-shadow: inset 0 0 20px #555555;
+		-webkit-box-shadow: inset 0 0 20px #555555;
+		box-shadow: inset 0 0 20px #555555;
+	}
+
+	#board {
+		right: 0;
+		left: 10%;
+		margin: auto;
+		margin-bottom: 50px;
+	}
+
+/*search bar style*/
+	select, input {
+		width: 95%;
+		margin-bottom: 5px;
+	}	
+
+	#submitAndRefresh{
+		width: 100%;
+	}
+
+	#generatedSearch img, #savedSearch img, #suggestedPuzzle img {
+		position: relative;
+		width: 90%;
+		clear: both;
+		margin: 20px 0 20px 10px;
+		overflow-y: auto;
+	}
+
+	.gif {
+		position: relative;
+	}
+
+	.gifPlayOption {
+		text-align: center;
+	}
+
+	.gifBtn {
+		position: relative;
+		margin-top: -65px;
+	}
+
+/*save bar style*/
+	#nav-saved {
+		padding-left: 10px;
+	}
+	
+/*suggestion bar style*/
+	.thumbnail {
+		width: 200px;
+		margin: 20px 34px;
+		cursor: pointer;
+	}
+
+	#nav-suggestion{
+		text-align: center;
+	}
+
+/*completed images*/
+	.completed {
+		height: 50%;
+		padding: 20px;
+		cursor: pointer;
+		transition: 0.3s;
+	}
+
+	.completed:hover {
+		opacity: 0.7;
+	}
+
+/* The Modal (background) */
+	.modal {
+	    display: none; /* Hidden by default */
+	    position: fixed; /* Stay in place */
+	    z-index: 1; /* Sit on top */
+	    padding-top: 100px; /* Location of the box */
+	    left: 0;
+	    top: 0;
+	    width: 100%; /* Full width */
+	    height: 100%; /* Full height */
+	    overflow: auto; /* Enable scroll if needed */
+	    background-color: rgb(0,0,0); /* Fallback color */
+	    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+	}
+
+/* Modal Content (image) */
+	.modal-content {
+	    margin: auto;
+	    display: block;
+	    max-width: 500px;
+	}
+
+/* Download Button for Modal Image */
+	#download {
+	    margin: auto;
+	    display: block;
+	    text-align: center;
+	    padding: 10px 0;
+	}
+
+/* Add Animation */
+	.modal-content, #download {    
+	    -webkit-animation-name: zoom;
+	    -webkit-animation-duration: 0.6s;
+	    animation-name: zoom;
+	    animation-duration: 0.6s;
+	}
+
+@-webkit-keyframes zoom {
+    from {-webkit-transform:scale(0)} 
+    to {-webkit-transform:scale(1)}
+}
+
+@keyframes zoom {
+    from {transform:scale(0)} 
+    to {transform:scale(1)}
+}
+
+/* The Close Button */
+	.close {
+	    position: absolute;
+	    top: 70px;
+	    right: 60px;
+	    color: #f1f1f1;
+	    font-size: 100px;
+	    font-weight: bold;
+	    transition: 0.3s;
+	}
+
+	.close:hover,
+	.close:focus {
+	    color: #eee;
+	    text-decoration: none;
+	    cursor: pointer;
+	}
+
+/* 100% Image Width on Smaller Screens */
+	@media only screen and (max-width: 700px){
+	    .modal-content {
+	        width: 100%;
+		}
+	}
+/* End of Modal Styling */
